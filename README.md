@@ -7,3 +7,6 @@ PROJETO DE AVALIAÇÃ0 - DASA
 | Requisitos | https://github.com/dasa-health/simple-test-backend/blob/master/README.md |
 
 
+Documentação
+-------------
+Modelo ER: docs/db/dasa.vpp (Arquivo Visual Paradigm - [diponível aqui](https://www.visual-paradigm.com/download/))
