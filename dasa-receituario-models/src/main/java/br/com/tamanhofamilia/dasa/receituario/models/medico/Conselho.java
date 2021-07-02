@@ -5,13 +5,13 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.io.Serializable;
@@ -20,7 +20,7 @@ import java.io.Serializable;
 @ToString
 @EqualsAndHashCode(of = "idConselho")
 @Entity
-@Table(schema = TableHelper.TABLE_SCHEMA, name = "conselho")
+@Table(schema = TableHelper.TABLE_SCHEMA, name = "conselhos")
 public class Conselho implements Serializable {
     @Id
     @Column(name = "id_conselho", columnDefinition = "SERIAL", updatable = false)
@@ -28,7 +28,7 @@ public class Conselho implements Serializable {
     private Long idConselho;
     @Column(columnDefinition = "varchar(255) NOT NULL", nullable = false, unique = true)
     private String nome;
-    @ManyToOne
-    @JoinColumn(name = "subordinado_a")
+    @ManyToOne(cascade = CascadeType.ALL )
+    @JoinColumn(name = "subordinado_a", columnDefinition = "integer")
     private Conselho subordinadoA;
 }

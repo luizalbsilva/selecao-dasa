@@ -28,7 +28,7 @@ public class Medico {
     private Long numeroConselho;
     @Column(name = "uf_conselho", length = 2, nullable = false)
     private String ufConselho;
-    @ManyToOne
-    @JoinColumn(name = "id_conselho")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "id_conselho", columnDefinition = "integer")
     private Conselho conselho;
 }

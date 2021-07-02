@@ -26,10 +26,10 @@ public class Pedido {
     private Long idPedido;
     @Column(name = "data_validade", columnDefinition = "DATE", nullable = false)
     private LocalDate dataValidade;
-    @ManyToOne
-    @JoinColumn(name = "id_medico", nullable = false)
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "id_medico", columnDefinition = "integer")
     private Medico medico;
-    @ManyToOne
-    @JoinColumn(name = "id_paciente", nullable = false)
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "id_paciente", columnDefinition = "integer")
     private Paciente paciente;
 }

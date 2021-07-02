@@ -21,5 +21,6 @@
 
     <modules>
         <module>dasa-receituario-models</module>
+        <module>dasa-receituario-restfull</module>
     </modules>
 </project>

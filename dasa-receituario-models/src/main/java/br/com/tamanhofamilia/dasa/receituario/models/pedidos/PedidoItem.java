@@ -25,10 +25,10 @@ public class PedidoItem {
     @Column(name = "id_pedido_item", columnDefinition = "serial", updatable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idPedidoItem;
-    @ManyToOne
-    @JoinColumn(name = "id_pedido", nullable = false)
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "id_pedido", columnDefinition = "integer")
     private Pedido pedido;
-    @ManyToOne
-    @JoinColumn(name = "id_exame", nullable = false)
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "id_exame", columnDefinition = "integer")
     private Exame exame;
 }
