@@ -17,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -31,9 +32,12 @@ public class PedidoItem {
     @Column(name = "id_pedido_item", columnDefinition = "serial", updatable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idPedidoItem;
+
     @ManyToOne(optional = false)
     @JoinColumn(name = "id_pedido", columnDefinition = "integer")
     private Pedido pedido;
+
+    @NotNull
     @ManyToOne(optional = false)
     @JoinColumn(name = "id_exame", columnDefinition = "integer")
     private Exame exame;

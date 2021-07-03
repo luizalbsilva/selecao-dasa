@@ -103,4 +103,11 @@ class PedidoItemsServiceTest {
             service.delete(id);
         });
     }
+
+    @Test
+    void findAllFromPedido() {
+        service.findAllFromPedido(1, pageable);
+
+        verify(dao).findByPedidoId(1, pageable);
+    }
 }

@@ -2,8 +2,9 @@ package br.com.tamanhofamilia.dasa.receituario.controllers.pedidos;
 
 import br.com.tamanhofamilia.dasa.receituario.controllers.PageableHelper;
 import br.com.tamanhofamilia.dasa.receituario.models.pedidos.Pedido;
+import br.com.tamanhofamilia.dasa.receituario.models.pedidos.PedidoItem;
 import br.com.tamanhofamilia.dasa.receituario.services.DataNotFoundException;
-import br.com.tamanhofamilia.dasa.receituario.services.pedidos.IPedidosService;
+import br.com.tamanhofamilia.dasa.receituario.services.pedidos.IPedidoItemsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,52 +25,63 @@ import java.net.URI;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(PedidosController.URL_BASE)
-public class PedidosController {
+@RequestMapping(PedidoItemsController.URL_BASE)
+public class PedidoItemsController {
     public static final String URL_BASE = "/api/v1/pedidos";
-    private IPedidosService pedidosService;
+    private IPedidoItemsService pedidoItemsService;
 
     @Autowired
-    public PedidosController(IPedidosService pedidosService) {
-        this.pedidosService = pedidosService;
+    public PedidoItemsController(IPedidoItemsService pedidoItemsService) {
+        this.pedidoItemsService = pedidoItemsService;
     }
 
-    @GetMapping
-    public Page<Pedido> readAll(@Param("pgInit") Optional<Integer> startPage, @Param("pgFim") Optional<Integer> endPage, @Param("sortBy") Optional<String> sortField) {
+    @GetMapping("/{idPedido}/items")
+    public Page<PedidoItem> readAll(
+            @PathVariable("idPedido") int idPedido,
+            @Param("pgInit") Optional<Integer> startPage, @Param("pgFim") Optional<Integer> endPage, @Param("sortBy") Optional<String> sortField) {
+
         Pageable pageable = PageableHelper.create(startPage, endPage, sortField);
-        return this.pedidosService.findAll(pageable);
+        return this.pedidoItemsService.findAllFromPedido(idPedido, pageable);
     }
 
-    @PostMapping
-    public ResponseEntity<Void> create(@Valid @RequestBody Pedido pedido) {
-        var id = pedidosService.create(pedido);
+    @PostMapping("/{idPedido}/items")
+    public ResponseEntity<Void> create(
+            @PathVariable("idPedido") int idPedido,
+            @Valid @RequestBody PedidoItem pedidoItem) {
+        if (pedidoItem.getPedido() == null) pedidoItem.setPedido(new Pedido());
+        pedidoItem.getPedido().setIdPedido(idPedido);
+
+        var id = pedidoItemsService.create(pedidoItem);
         return ResponseEntity.created(URI.create(String.format("%s/%s", URL_BASE, id))).build();
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Object> update(@PathVariable("id") int id, @Valid @RequestBody Pedido pedido) {
-        pedido.setIdPedido(id);
+    @PutMapping("/{idPedido}/items/{id}")
+    public ResponseEntity<Object> update(
+            @PathVariable("id") long id, @Valid @RequestBody PedidoItem pedidoItem) {
+        pedidoItem.setIdPedidoItem(id);
         try {
-            pedidosService.update(pedido);
+            pedidoItemsService.update(pedidoItem);
             return ResponseEntity.noContent().build();
         } catch (DataNotFoundException e) {
             return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();
         }
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Object> get(@PathVariable("id") int id) {
-        final Optional<Pedido> pedido = pedidosService.getById(id);
-        if (pedido.isEmpty()){
+    @GetMapping("/{idPedido}/items/{id}")
+    public ResponseEntity<Object> get(
+            @PathVariable("id") long id) {
+        final Optional<PedidoItem> pedidoItem = pedidoItemsService.getById(id);
+        if (pedidoItem.isEmpty()){
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(pedido.get());
+        return ResponseEntity.ok(pedidoItem.get());
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Object> delete(@PathVariable("id") int id) {
+    @DeleteMapping("/{idPedido}/items/{id}")
+    public ResponseEntity<Object> delete(
+            @PathVariable("id") long id) {
         try {
-            pedidosService.delete(id);
+            pedidoItemsService.delete(id);
             return ResponseEntity.noContent().build();
         } catch (DataNotFoundException e) {
             return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();

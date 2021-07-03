@@ -13,42 +13,47 @@ import java.util.Optional;
 
 @Service
 public class PedidoItemsService implements IPedidoItemsService {
-    private final PedidoItemDao dao;
+    private final PedidoItemDao pedidoItemDao;
 
     @Autowired
-    PedidoItemsService(PedidoItemDao dao) {
-        this.dao = dao;
+    PedidoItemsService(PedidoItemDao pedidoItemDao) {
+        this.pedidoItemDao = pedidoItemDao;
     }
 
     @Override
     public Page<PedidoItem> findAll(Pageable pageable) {
-        return dao.findAll(pageable);
+        return pedidoItemDao.findAll(pageable);
     }
 
     @Override
     public Long create(PedidoItem pedidoItem) {
-        final PedidoItem saved = dao.save(pedidoItem);
+        final PedidoItem saved = pedidoItemDao.save(pedidoItem);
         return saved.getIdPedidoItem();
     }
 
     @Override
     public void update(PedidoItem pedidoItem) throws DataNotFoundException {
-        if ( !dao.existsById(pedidoItem.getIdPedidoItem()) ) {
+        if ( !pedidoItemDao.existsById(pedidoItem.getIdPedidoItem()) ) {
             throw new DataNotFoundException(String.format("Item do Pedido não encontrado. Id: %d", pedidoItem.getIdPedidoItem()) );
         }
-        dao.save(pedidoItem);
+        pedidoItemDao.save(pedidoItem);
     }
 
     @Override
     public Optional<PedidoItem> getById(@NonNull Long id) {
-        return dao.findById(id);
+        return pedidoItemDao.findById(id);
     }
 
     @Override
     public void delete(@NonNull Long id) throws DataNotFoundException {
-        if (!dao.existsById(id)) {
+        if (!pedidoItemDao.existsById(id)) {
             throw new DataNotFoundException(String.format("Item do Pedido não encontrado. Id: %d", id) );
         }
-        dao.deleteById(id);
+        pedidoItemDao.deleteById(id);
+    }
+
+    @Override
+    public Page<PedidoItem> findAllFromPedido(int idPedido, Pageable pageable) {
+        return pedidoItemDao.findByPedidoId(idPedido, pageable);
     }
 }
