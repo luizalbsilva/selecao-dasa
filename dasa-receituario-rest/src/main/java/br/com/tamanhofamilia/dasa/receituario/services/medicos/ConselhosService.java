@@ -3,6 +3,7 @@ package br.com.tamanhofamilia.dasa.receituario.services.medicos;
 import br.com.tamanhofamilia.dasa.receituario.daos.medico.ConselhoDao;
 import br.com.tamanhofamilia.dasa.receituario.models.medico.Conselho;
 import br.com.tamanhofamilia.dasa.receituario.services.DataNotFoundException;
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,7 +27,7 @@ public class ConselhosService implements IConselhosService {
     }
 
     @Override
-    public int create(Conselho conselho) {
+    public Integer create(Conselho conselho) {
         final Conselho saved = dao.save(conselho);
         return saved.getIdConselho();
     }
@@ -40,12 +41,12 @@ public class ConselhosService implements IConselhosService {
     }
 
     @Override
-    public Optional<Conselho> getById(int id) {
+    public Optional<Conselho> getById(@NonNull Integer id) {
         return dao.findById(id);
     }
 
     @Override
-    public void delete(int id) throws DataNotFoundException {
+    public void delete(@NonNull Integer id) throws DataNotFoundException {
         if (!dao.existsById(id)) {
             throw new DataNotFoundException(String.format("Conselho não encontrado. Id: %d", id) );
         }

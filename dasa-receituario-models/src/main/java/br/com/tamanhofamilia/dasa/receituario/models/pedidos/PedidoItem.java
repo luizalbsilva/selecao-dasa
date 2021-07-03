@@ -2,8 +2,11 @@ package br.com.tamanhofamilia.dasa.receituario.models.pedidos;
 
 import br.com.tamanhofamilia.dasa.receituario.models.TableHelper;
 import br.com.tamanhofamilia.dasa.receituario.models.exame.Exame;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.Column;
@@ -15,6 +18,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Data
 @ToString
 @EqualsAndHashCode(of = "idPedidoItem")

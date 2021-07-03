@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PedidoItemDao extends JpaRepository<PedidoItem, Integer> {
+public interface PedidoItemDao extends JpaRepository<PedidoItem, Long> {
 }

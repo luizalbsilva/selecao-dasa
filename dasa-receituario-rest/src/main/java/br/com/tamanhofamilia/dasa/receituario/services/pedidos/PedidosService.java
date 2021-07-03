@@ -3,6 +3,7 @@ package br.com.tamanhofamilia.dasa.receituario.services.pedidos;
 import br.com.tamanhofamilia.dasa.receituario.daos.pedidos.PedidoDao;
 import br.com.tamanhofamilia.dasa.receituario.models.pedidos.Pedido;
 import br.com.tamanhofamilia.dasa.receituario.services.DataNotFoundException;
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,7 +26,7 @@ public class PedidosService implements IPedidosService {
     }
 
     @Override
-    public int create(Pedido pedido) {
+    public Integer create(Pedido pedido) {
         final Pedido saved = dao.save(pedido);
         return saved.getIdPedido();
     }
@@ -39,12 +40,12 @@ public class PedidosService implements IPedidosService {
     }
 
     @Override
-    public Optional<Pedido> getById(int id) {
+    public Optional<Pedido> getById(@NonNull Integer id) {
         return dao.findById(id);
     }
 
     @Override
-    public void delete(int id) throws DataNotFoundException {
+    public void delete(@NonNull Integer id) throws DataNotFoundException {
         if (!dao.existsById(id)) {
             throw new DataNotFoundException(String.format("Pedido não encontrado. Id: %d", id) );
         }
