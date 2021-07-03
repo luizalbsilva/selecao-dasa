@@ -1,11 +1,8 @@
 package br.com.tamanhofamilia.dasa.receituario.services.medicos;
 
-import br.com.tamanhofamilia.dasa.receituario.daos.exame.ExameDao;
 import br.com.tamanhofamilia.dasa.receituario.daos.medico.ConselhoDao;
-import br.com.tamanhofamilia.dasa.receituario.models.exame.Exame;
 import br.com.tamanhofamilia.dasa.receituario.models.medico.Conselho;
 import br.com.tamanhofamilia.dasa.receituario.services.DataNotFoundException;
-import br.com.tamanhofamilia.dasa.receituario.services.exames.ExamesService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,7 +12,8 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 

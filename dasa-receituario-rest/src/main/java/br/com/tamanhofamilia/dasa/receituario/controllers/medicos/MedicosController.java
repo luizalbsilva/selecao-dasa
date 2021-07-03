@@ -1,8 +1,8 @@
 package br.com.tamanhofamilia.dasa.receituario.controllers.medicos;
 
-import br.com.tamanhofamilia.dasa.receituario.models.medico.Conselho;
+import br.com.tamanhofamilia.dasa.receituario.models.medico.Medico;
 import br.com.tamanhofamilia.dasa.receituario.services.DataNotFoundException;
-import br.com.tamanhofamilia.dasa.receituario.services.medicos.IConselhosService;
+import br.com.tamanhofamilia.dasa.receituario.services.medicos.IMedicosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,18 +25,18 @@ import java.net.URI;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(ConselhosController.URL_BASE)
-public class ConselhosController {
-    public static final String URL_BASE = "/api/v1/conselhos";
-    private IConselhosService service;
+@RequestMapping(MedicosController.URL_BASE)
+public class MedicosController {
+    public static final String URL_BASE = "/api/v1/medicos";
+    private IMedicosService service;
 
     @Autowired
-    public ConselhosController(IConselhosService conselhosService) {
-        this.service = conselhosService;
+    public MedicosController(IMedicosService medicosService) {
+        this.service = medicosService;
     }
 
     @GetMapping
-    public Page<Conselho> readAll(@Param("pgInit") Optional<Integer> startPage, @Param("pgFim") Optional<Integer> endPage, @Param("sortBy") Optional<String> sortField) {
+    public Page<Medico> readAll(@Param("pgInit") Optional<Integer> startPage, @Param("pgFim") Optional<Integer> endPage, @Param("sortBy") Optional<String> sortField) {
         Pageable pageable = null;
         if (startPage.isEmpty() && endPage.isEmpty() && sortField.isEmpty()) {
             pageable = Pageable.unpaged();
@@ -56,16 +56,16 @@ public class ConselhosController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@Valid @RequestBody Conselho conselho) {
-        var id = service.create(conselho);
+    public ResponseEntity<Void> create(@Valid @RequestBody Medico medico) {
+        var id = service.create(medico);
         return ResponseEntity.created(URI.create(String.format("%s/%s", URL_BASE, id))).build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> update(@PathVariable("id") int id, @Valid @RequestBody Conselho conselho) {
-        conselho.setIdConselho(id);
+    public ResponseEntity<Object> update(@PathVariable("id") int id, @Valid @RequestBody Medico medico) {
+        medico.setIdMedico(id);
         try {
-            service.update(conselho);
+            service.update(medico);
             return ResponseEntity.noContent().build();
         } catch (DataNotFoundException e) {
             return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();
@@ -74,11 +74,11 @@ public class ConselhosController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> get(@PathVariable("id") int id) {
-        final Optional<Conselho> conselho = service.getById(id);
-        if (conselho.isEmpty()){
+        final Optional<Medico> medico = service.getById(id);
+        if (medico.isEmpty()){
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(conselho.get());
+        return ResponseEntity.ok(medico.get());
     }
 
     @DeleteMapping("/{id}")

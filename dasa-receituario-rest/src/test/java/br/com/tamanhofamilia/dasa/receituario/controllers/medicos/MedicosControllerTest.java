@@ -1,8 +1,8 @@
-package br.com.tamanhofamilia.dasa.receituario.controllers.exames;
+package br.com.tamanhofamilia.dasa.receituario.controllers.medicos;
 
-import br.com.tamanhofamilia.dasa.receituario.models.exame.Exame;
+import br.com.tamanhofamilia.dasa.receituario.models.medico.Medico;
 import br.com.tamanhofamilia.dasa.receituario.services.DataNotFoundException;
-import br.com.tamanhofamilia.dasa.receituario.services.exames.IExamesService;
+import br.com.tamanhofamilia.dasa.receituario.services.medicos.IMedicosService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,8 +16,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Optional;
 
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyInt;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -28,12 +28,20 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
-class ExamesControllerTest {
+class MedicosControllerTest {
+    private static final String MEDICO =
+            "{" +
+                    "\"numeroConselho\": 1234," +
+                    "\"ufConselho\": \"SP\"," +
+                    "\"conselho\": {" +
+                    "\"idConselho\": 1" +
+            "} }";
+
     @InjectMocks
-    ExamesController controller;
+    MedicosController controller;
 
     @Mock
-    IExamesService service;
+    IMedicosService service;
 
     private MockMvc mockMvc;
 
@@ -45,7 +53,7 @@ class ExamesControllerTest {
 
     @Test
     void readAll() throws Exception {
-        mockMvc.perform(get("/api/v1/exames")).andExpect(status().isOk());
+        mockMvc.perform(get("/api/v1/medicos")).andExpect(status().isOk());
 
         verify(service).findAll(any(Pageable.class));
     }
@@ -53,40 +61,40 @@ class ExamesControllerTest {
     @Test
     void createWithoutData() throws Exception {
         mockMvc.perform(
-                post("/api/v1/exames")
-                    .accept(MediaType.APPLICATION_JSON)
+                post("/api/v1/medicos")
+                        .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isBadRequest());
     }
 
     @Test
     void createEmptyData() throws Exception {
         mockMvc.perform(
-                post("/api/v1/exames")
-                    .content("{ }")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.APPLICATION_JSON)
+                post("/api/v1/medicos")
+                        .content("{ }")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isBadRequest());
     }
 
     @Test
     void createData() throws Exception {
-        when(service.create(any(Exame.class)))
+        when(service.create(any(Medico.class)))
                 .thenReturn(1);
         mockMvc.perform(
-                post("/api/v1/exames")
-                    .content("{ \"descricao\": \"Hemograma Simples \" }")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.APPLICATION_JSON)
+                post("/api/v1/medicos")
+                        .content(MEDICO)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isCreated());
 
-        verify(service).create(any(Exame.class));
+        verify(service).create(any(Medico.class));
     }
 
     @Test
     void updateReturnStatus() throws Exception {
         mockMvc.perform(
-                put("/api/v1/exames/1")
-                        .content("{ \"descricao\": \"Hemograma Simples \" }")
+                put("/api/v1/medicos/1")
+                        .content(MEDICO)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isNoContent());
@@ -94,43 +102,43 @@ class ExamesControllerTest {
 
     @Test
     void updateNotFound() throws Exception, DataNotFoundException {
-        doThrow(new DataNotFoundException()).when(service).update(any(Exame.class));
+        doThrow(new DataNotFoundException()).when(service).update(any(Medico.class));
         mockMvc.perform(
-                put("/api/v1/exames/1")
-                        .content("{ \"descricao\": \"Hemograma Simples \" }")
+                put("/api/v1/medicos/1")
+                        .content(MEDICO)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isPreconditionFailed());
 
-        verify(service).update(any(Exame.class));
+        verify(service).update(any(Medico.class));
     }
 
     @Test
     void update() throws Exception {
         mockMvc.perform(
-                put("/api/v1/exames/1")
-                        .content("{ \"descricao\": \"Hemograma Simples \" }")
+                put("/api/v1/medicos/1")
+                        .content(MEDICO)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isNoContent());
 
-        verify(service).update(any(Exame.class));
+        verify(service).update(any(Medico.class));
     }
 
     @Test
     void testGetSemDados() throws Exception {
         mockMvc.perform(
-                get("/api/v1/exames/1")
+                get("/api/v1/medicos/1")
         ).andExpect(status().isNoContent());
     }
 
     @Test
     void testGetComDados() throws Exception {
         when(service.getById(anyInt()))
-                .thenReturn(Optional.of(new Exame()));
+                .thenReturn(Optional.of(new Medico()));
 
         mockMvc.perform(
-                get("/api/v1/exames/1")
+                get("/api/v1/medicos/1")
         ).andExpect(status().isOk());
     }
 
@@ -140,14 +148,15 @@ class ExamesControllerTest {
                 .when(service).delete(anyInt());
 
         mockMvc.perform(
-                delete("/api/v1/exames/1")
+                delete("/api/v1/medicos/1")
         ).andExpect(status().isPreconditionFailed());
     }
 
     @Test
     void deleteOk() throws Exception {
         mockMvc.perform(
-                delete("/api/v1/exames/1")
+                delete("/api/v1/medicos/1")
         ).andExpect(status().isNoContent());
     }
+
 }

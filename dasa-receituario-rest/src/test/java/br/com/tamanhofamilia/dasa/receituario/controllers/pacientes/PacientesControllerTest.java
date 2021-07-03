@@ -1,15 +1,8 @@
 package br.com.tamanhofamilia.dasa.receituario.controllers.pacientes;
 
-import br.com.tamanhofamilia.dasa.receituario.models.paciente.DocumentosPF;
-import br.com.tamanhofamilia.dasa.receituario.models.paciente.Endereco;
 import br.com.tamanhofamilia.dasa.receituario.models.paciente.Paciente;
-import br.com.tamanhofamilia.dasa.receituario.models.paciente.Sexo;
 import br.com.tamanhofamilia.dasa.receituario.services.DataNotFoundException;
 import br.com.tamanhofamilia.dasa.receituario.services.pacientes.IPacientesService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,7 +14,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;

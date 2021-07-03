@@ -1,7 +1,7 @@
-package br.com.tamanhofamilia.dasa.receituario.services.exames;
+package br.com.tamanhofamilia.dasa.receituario.services.medicos;
 
-import br.com.tamanhofamilia.dasa.receituario.daos.exame.ExameDao;
-import br.com.tamanhofamilia.dasa.receituario.models.exame.Exame;
+import br.com.tamanhofamilia.dasa.receituario.daos.medico.MedicoDao;
+import br.com.tamanhofamilia.dasa.receituario.models.medico.Medico;
 import br.com.tamanhofamilia.dasa.receituario.services.DataNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,12 +18,12 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class ExamesServiceTest {
+class MedicosServiceTest {
     @InjectMocks
-    ExamesService service;
+    MedicosService service;
 
     @Mock
-    ExameDao dao;
+    MedicoDao dao;
 
     @Mock
     Pageable pageable;
@@ -37,16 +37,16 @@ class ExamesServiceTest {
 
     @Test
     void create() {
-        Exame exame = new Exame();
-        when(dao.save(exame)).thenAnswer(e -> {
-            Exame exam = e.getArgument(0);
-            exam.setIdExame(1);
+        Medico medico = new Medico();
+        when(dao.save(medico)).thenAnswer(e -> {
+            Medico exam = e.getArgument(0);
+            exam.setIdMedico(1);
             return exam;
         });
 
-        assertSame(1, service.create(exame));
+        assertSame(1, service.create(medico));
 
-        verify(dao).save(exame);
+        verify(dao).save(medico);
 
     }
 
@@ -55,29 +55,29 @@ class ExamesServiceTest {
     void update() throws DataNotFoundException {
         final int id = 1;
         when(dao.existsById(id)).thenReturn(true);
-        Exame exame = Exame.builder().idExame(id).build();
+        Medico medico = Medico.builder().idMedico(id).build();
 
-        service.update(exame);
+        service.update(medico);
 
-        verify(dao).save(exame);
+        verify(dao).save(medico);
     }
 
     @Test
     void updateNotFound() {
-        Exame exame = Exame.builder().idExame(1).build();
+        Medico medico = Medico.builder().idMedico(1).build();
 
         assertThrows(DataNotFoundException.class, () -> {
-            service.update(exame);
+            service.update(medico);
         });
     }
 
     @Test
     void getById() {
         final int id = 1;
-        final Optional<Exame> daoReturn = Optional.empty();
+        final Optional<Medico> daoReturn = Optional.empty();
         when(dao.findById(id)).thenReturn(daoReturn);
 
-        final Optional<Exame> toCheck = service.getById(id);
+        final Optional<Medico> toCheck = service.getById(id);
 
         assertSame(daoReturn, toCheck);
         verify(dao).findById(id);

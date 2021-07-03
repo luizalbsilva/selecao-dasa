@@ -1,7 +1,6 @@
 package br.com.tamanhofamilia.dasa.receituario.services.medicos;
 
 import br.com.tamanhofamilia.dasa.receituario.daos.medico.ConselhoDao;
-import br.com.tamanhofamilia.dasa.receituario.models.exame.Exame;
 import br.com.tamanhofamilia.dasa.receituario.models.medico.Conselho;
 import br.com.tamanhofamilia.dasa.receituario.services.DataNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
