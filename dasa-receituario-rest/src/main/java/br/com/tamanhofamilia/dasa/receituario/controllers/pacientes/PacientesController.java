@@ -1,8 +1,8 @@
-package br.com.tamanhofamilia.dasa.receituario.controllers.exames;
+package br.com.tamanhofamilia.dasa.receituario.controllers.pacientes;
 
-import br.com.tamanhofamilia.dasa.receituario.models.exame.Exame;
+import br.com.tamanhofamilia.dasa.receituario.models.paciente.Paciente;
 import br.com.tamanhofamilia.dasa.receituario.services.DataNotFoundException;
-import br.com.tamanhofamilia.dasa.receituario.services.exames.IExamesService;
+import br.com.tamanhofamilia.dasa.receituario.services.pacientes.IPacientesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,18 +25,18 @@ import java.net.URI;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(ExamesController.URL_BASE)
-public class ExamesController {
-    public static final String URL_BASE = "/api/v1/exames";
-    private IExamesService examesService;
+@RequestMapping(PacientesController.URL_BASE)
+public class PacientesController {
+    public static final String URL_BASE = "/api/v1/pacientes";
+    private IPacientesService pacientesService;
 
     @Autowired
-    public ExamesController(IExamesService examesService) {
-        this.examesService = examesService;
+    PacientesController(IPacientesService pacientesService) {
+        this.pacientesService = pacientesService;
     }
 
     @GetMapping
-    public Page<Exame> readAll(@Param("pgInit") Optional<Integer> startPage, @Param("pgFim") Optional<Integer> endPage, @Param("sortBy") Optional<String> sortField) {
+    public Page<Paciente> readAll(@Param("pgInit") Optional<Integer> startPage, @Param("pgFim") Optional<Integer> endPage, @Param("sortBy") Optional<String> sortField) {
 
         Pageable pageable = null;
         if (startPage.isEmpty() && endPage.isEmpty() && sortField.isEmpty()) {
@@ -53,20 +53,20 @@ public class ExamesController {
                 pageable = PageRequest.of(startpg, endpg, Sort.by(sortField.get()));
             }
         }
-        return this.examesService.findAll(pageable);
+        return this.pacientesService.findAll(pageable);
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@Valid @RequestBody Exame exame) {
-        var id = examesService.create(exame);
+    public ResponseEntity<Void> create(@Valid @RequestBody Paciente pacienteDto) {
+        var id = pacientesService.create(pacienteDto);
         return ResponseEntity.created(URI.create(String.format("%s/%s", URL_BASE, id))).build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> update(@PathVariable("id") int id, @Valid @RequestBody Exame exame) {
-        exame.setIdExame(id);
+    public ResponseEntity<Object> update(@PathVariable("id") int id, @Valid @RequestBody Paciente pacienteDto) {
+        pacienteDto.setIdPaciente(id);
         try {
-            examesService.update(exame);
+            pacientesService.update(pacienteDto);
             return ResponseEntity.noContent().build();
         } catch (DataNotFoundException e) {
             return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();
@@ -75,17 +75,17 @@ public class ExamesController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> get(@PathVariable("id") int id) {
-        final Optional<Exame> exame = examesService.getById(id);
-        if (exame.isEmpty()){
+        final Optional<Paciente> paciente = pacientesService.getById(id);
+        if (paciente.isEmpty()){
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(exame.get());
+        return ResponseEntity.ok(paciente.get());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> delete(@PathVariable("id") int id) {
         try {
-            examesService.delete(id);
+            pacientesService.delete(id);
             return ResponseEntity.noContent().build();
         } catch (DataNotFoundException e) {
             return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();

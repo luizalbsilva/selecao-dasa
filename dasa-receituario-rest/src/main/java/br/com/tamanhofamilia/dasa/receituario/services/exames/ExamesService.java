@@ -3,6 +3,7 @@ package br.com.tamanhofamilia.dasa.receituario.services.exames;
 import br.com.tamanhofamilia.dasa.receituario.daos.exame.ExameDao;
 import br.com.tamanhofamilia.dasa.receituario.models.exame.Exame;
 import br.com.tamanhofamilia.dasa.receituario.services.DataNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import java.util.Optional;
 public class ExamesService implements IExamesService {
     private final ExameDao dao;
 
+    @Autowired
     ExamesService(ExameDao dao) {
         this.dao = dao;
     }
