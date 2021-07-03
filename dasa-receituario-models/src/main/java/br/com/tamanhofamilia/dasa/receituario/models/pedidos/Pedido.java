@@ -23,7 +23,7 @@ import java.time.LocalDate;
 public class Pedido {
     @Id
     @Column(name = "id_pedido", columnDefinition = "SERIAL", updatable = false)
-    private Long idPedido;
+    private Integer idPedido;
     @Column(name = "data_validade", columnDefinition = "DATE", nullable = false)
     private LocalDate dataValidade;
     @ManyToOne(optional = false)

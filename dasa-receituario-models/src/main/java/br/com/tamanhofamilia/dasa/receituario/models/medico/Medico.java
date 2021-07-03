@@ -23,7 +23,7 @@ public class Medico {
     @Id
     @Column(name = "id_medico", columnDefinition = "SERIAL", updatable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long idMedico;
+    private Integer idMedico;
     @Column(name = "numero_conselho", nullable = false)
     private Long numeroConselho;
     @Column(name = "uf_conselho", length = 2, nullable = false)

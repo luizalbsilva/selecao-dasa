@@ -25,7 +25,7 @@ public class Paciente {
     @Id
     @Column(name = "id_paciente", columnDefinition = "SERIAL", updatable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long idPaciente;
+    private Integer idPaciente;
 
     @Column(name = "nome", columnDefinition = "varchar(255)", nullable = false)
     private String nome;

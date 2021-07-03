@@ -25,7 +25,7 @@ public class Conselho implements Serializable {
     @Id
     @Column(name = "id_conselho", columnDefinition = "SERIAL", updatable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long idConselho;
+    private Integer idConselho;
     @Column(columnDefinition = "varchar(255) NOT NULL", nullable = false, unique = true)
     private String nome;
     @ManyToOne(cascade = CascadeType.ALL )

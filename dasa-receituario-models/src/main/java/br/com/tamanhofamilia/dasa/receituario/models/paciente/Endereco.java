@@ -9,7 +9,7 @@ import javax.persistence.Embeddable;
 @Data
 public class Endereco {
     @Column(name = "endereco", columnDefinition = "varchar(255) not null", nullable = false)
-    private String endereco;
+    private String rua;
     @Column(name = "bairro", columnDefinition = "varchar(255)")
     private String bairro;
 }

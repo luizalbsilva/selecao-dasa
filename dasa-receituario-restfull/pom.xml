@@ -8,13 +8,15 @@
 		<version>1.0-SNAPSHOT</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<artifactId>dasa-receituario-rest</artifactId>
+
+ 	<artifactId>dasa-receituario-restfull</artifactId>
 	<name>dasa-receituario-restfull</name>
+
 	<description>Restull module</description>
 	<dependencies>
 		<dependency>
 			<groupId>br.com.tamanhofamilia.dasa</groupId>
-			<artifactId>dasa-receituario-models</artifactId>
+			<artifactId>dasa-receituario-dao</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>

@@ -5,9 +5,9 @@ import javax.persistence.Embeddable;
 
 @Embeddable
 public class DocumentosPF {
-    @Column(name = "rg", columnDefinition = "char(9)")
+    @Column(name = "rg", length = 9)
     private String rg;
 
-    @Column(name = "cpf", columnDefinition = "char(11)", nullable = false)
+    @Column(name = "cpf", nullable = false, length = 11)
     private String cpf;
 }
