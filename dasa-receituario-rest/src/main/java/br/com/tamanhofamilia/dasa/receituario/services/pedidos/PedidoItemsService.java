@@ -27,7 +27,7 @@ public class PedidoItemsService implements IPedidoItemsService {
 
     @Override
     public Long create(PedidoItem pedidoItem) {
-        final PedidoItem saved = pedidoItemDao.save(pedidoItem);
+        final var saved = pedidoItemDao.save(pedidoItem);
         return saved.getIdPedidoItem();
     }
 

@@ -6,13 +6,13 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
 
-public interface IService<T, ID> {
+public interface IService<T, I> {
     Page<T> findAll(Pageable pageable);
 
-    ID create(T exame);
+    I create(T exame);
     void update(T exame) throws DataNotFoundException;
 
-    Optional<T> getById(@NonNull ID id);
+    Optional<T> getById(@NonNull I id);
 
-    void delete(@NonNull ID id) throws DataNotFoundException;
+    void delete(@NonNull I id) throws DataNotFoundException;
 }

@@ -12,7 +12,7 @@ public class LocalDateSpringConverter implements Converter<String, LocalDate> {
     @Override
     public LocalDate convert(String value) {
         if(value != null) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            var formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             return LocalDate.parse(value, formatter);
         }else {
             return null;

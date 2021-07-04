@@ -7,7 +7,9 @@ import org.springframework.data.domain.Sort;
 import java.util.Optional;
 
 public class PageableHelper {
-    public static Pageable create(Optional<Integer> startPage, Optional<Integer> endPage, Optional<String> sortField){
+    private PageableHelper() { }
+
+    public static Pageable create(Optional<Integer> startPage, Optional<Integer> endPage, Optional<String> sortField) {
         Pageable pageable = null;
         if (startPage.isEmpty() && endPage.isEmpty() && sortField.isEmpty()) {
             pageable = Pageable.unpaged();
