@@ -30,7 +30,7 @@ public class Exame {
     @ApiModelProperty("Identificador do Exame")
     @Id
     @Column(name = "id_exame", columnDefinition = "SERIAL", updatable = false)
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idExame;
 
     @ApiModelProperty("Descrição do Exame")

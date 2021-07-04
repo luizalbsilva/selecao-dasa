@@ -34,7 +34,7 @@ public class Conselho implements Serializable {
     @ApiModelProperty("Identificador do Conselho Profissional")
     @Id
     @Column(name = "id_conselho", columnDefinition = "SERIAL", updatable = false)
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idConselho;
 
     @ApiModelProperty("Nome do Conselho")

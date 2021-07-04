@@ -1,0 +1,116 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet id="1.0.0-Schema" author="luizalbsilva">
+        <sql>create schema receituario</sql>
+        <createTable tableName="exames" schemaName="receituario">
+            <column name="id_exame" autoIncrement="true" type="serial">
+                <constraints primaryKey="true" primaryKeyName="pk_exames" />
+            </column>
+            <column name="descricao" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+        </createTable>
+        <createTable tableName="conselhos" schemaName="receituario">
+            <column name="id_conselho" autoIncrement="true" type="serial">
+                <constraints primaryKey="true" primaryKeyName="pk_conselhos" />
+            </column>
+            <column name="nome" type="varchar(255)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uk_conselhos" />
+            </column>
+            <column name="subordinado_a" type="integer">
+                <constraints nullable="true"
+                             references="receituario.conselhos"
+                             referencedColumnNames="id_conselho"
+                             foreignKeyName="fk_conselhos_subordinacao" />
+            </column>
+        </createTable>
+        <createTable tableName="medicos" schemaName="receituario">
+            <column name="id_medico" type="serial">
+                <constraints primaryKey="true" primaryKeyName=" pk_medicos" />
+            </column>
+            <column name="numero_conselho" type="bigint" >
+                <constraints nullable="false" />
+            </column>
+            <column name="uf_conselho" type="varchar(2)">
+                <constraints nullable="false" />
+            </column>
+            <column name="id_conselho" type="integer">
+                <constraints nullable="false"
+                             references="receituario.conselhos"
+                             referencedColumnNames="id_conselho"
+                             foreignKeyName="fk_medicos_conselho"
+                    />
+            </column>
+        </createTable>
+        <createTable tableName="pacientes" schemaName="receituario">
+            <column name="id_paciente" type="serial">
+                <constraints primaryKey="true" primaryKeyName="pk_pacientes" />
+            </column>
+            <column name="nome" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="nome_mae" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="sexo" type="numeric(1,0)">
+                <constraints nullable="false" />
+            </column>
+            <column name="nascimento" type="date">
+                <constraints nullable="false" />
+            </column>
+            <column name="rg" type="varchar(9)" />
+            <column name="cpf" type="varchar(11)">
+                <constraints nullable="false" />
+            </column>
+            <column name="endereco" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="bairro" type="varchar(255)"/>
+            <column name="telefone" type="varchar(11)">
+            </column>
+            <column name="mobile" type="varchar(11)">
+                <constraints nullable="false" />
+            </column>
+            <column name="email" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <createTable tableName="pedidos" schemaName="receituario" >
+            <column name="id_pedido" type="serial">
+                <constraints primaryKey="true" primaryKeyName="pk_pedidos"/>
+            </column>
+            <column name="data_validade" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_medico" type="integer">
+                <constraints nullable="false"
+                             references="receituario.medicos"
+                             referencedColumnNames="id_medico"
+                             foreignKeyName="fk_receitas_medicos"/>
+            </column>
+            <column name="id_paciente" type="integer">
+                <constraints nullable="false"
+                             references="receituario.pacientes"
+                             referencedColumnNames="id_paciente"
+                             foreignKeyName="fk_receitas_pacientes" />
+            </column>
+        </createTable>
+        <createTable tableName="pedido_itens" schemaName="receituario" >
+            <column name="id_pedido_item" type="bigserial">
+                <constraints primaryKey="true" primaryKeyName="pk_pedidos_itens" />
+            </column>
+            <column name="id_exame" type="integer">
+                <constraints nullable="false"
+                             references="receituario.exames"
+                             referencedColumnNames="id_exame"
+                             foreignKeyName="fk_pedido_itens_exames" />
+            </column>
+            <column name="id_pedido" type="integer">
+                <constraints nullable="false"
+                             references="receituario.pedidos"
+                             referencedColumnNames="id_pedido"
+                             foreignKeyName="fk_pedido_itens_pedidos" />
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

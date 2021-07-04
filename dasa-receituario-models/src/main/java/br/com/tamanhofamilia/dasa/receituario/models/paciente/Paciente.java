@@ -35,7 +35,7 @@ public class Paciente {
     @ApiModelProperty("Identificador do Paciente")
     @Id
     @Column(name = "id_paciente", columnDefinition = "SERIAL", updatable = false)
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idPaciente;
 
     @ApiModelProperty("Nome do Paciente")

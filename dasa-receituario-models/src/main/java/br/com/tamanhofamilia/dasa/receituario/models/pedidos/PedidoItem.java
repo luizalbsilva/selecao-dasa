@@ -31,8 +31,8 @@ import javax.validation.constraints.NotNull;
 public class PedidoItem {
     @ApiModelProperty("Identificador do Item do Pedido")
     @Id
-    @Column(name = "id_pedido_item", columnDefinition = "serial", updatable = false)
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id_pedido_item", columnDefinition = "bigserial", updatable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idPedidoItem;
 
     @ApiModelProperty("Identificador do Pedido")

@@ -33,7 +33,7 @@ public class Medico {
     @ApiModelProperty("Identificador do Médico")
     @Id
     @Column(name = "id_medico", columnDefinition = "SERIAL", updatable = false)
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idMedico;
 
     @ApiModelProperty("Número no Conselho Profissional")

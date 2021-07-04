@@ -13,6 +13,8 @@ import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -32,6 +34,7 @@ public class Pedido {
     @ApiModelProperty("Identificador do Pedido")
     @Id
     @Column(name = "id_pedido", columnDefinition = "SERIAL", updatable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idPedido;
 
     @ApiModelProperty("Data de Validade do Pedido")
