@@ -1,6 +1,7 @@
 package br.com.tamanhofamilia.dasa.receituario.models.exame;
 
 import br.com.tamanhofamilia.dasa.receituario.models.TableHelper;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,11 +27,13 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(schema = TableHelper.TABLE_SCHEMA, name = "exames")
 public class Exame {
+    @ApiModelProperty("Identificador do Exame")
     @Id
     @Column(name = "id_exame", columnDefinition = "SERIAL", updatable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer idExame;
 
+    @ApiModelProperty("Descrição do Exame")
     @NotNull
     @Length(min = 5, max = 255)
     @Column(name="descricao")

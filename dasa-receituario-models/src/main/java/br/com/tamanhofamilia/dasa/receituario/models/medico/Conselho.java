@@ -1,6 +1,7 @@
 package br.com.tamanhofamilia.dasa.receituario.models.medico;
 
 import br.com.tamanhofamilia.dasa.receituario.models.TableHelper;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,16 +31,19 @@ import java.io.Serializable;
 @Entity
 @Table(schema = TableHelper.TABLE_SCHEMA, name = "conselhos")
 public class Conselho implements Serializable {
+    @ApiModelProperty("Identificador do Conselho Profissional")
     @Id
     @Column(name = "id_conselho", columnDefinition = "SERIAL", updatable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer idConselho;
 
+    @ApiModelProperty("Nome do Conselho")
     @NotNull
     @Length(min=2, max = 255)
     @Column(columnDefinition = "varchar(255) NOT NULL", nullable = false, unique = true)
     private String nome;
 
+    @ApiModelProperty("Identificador ao Conselho ao qual está subordinado")
     @ManyToOne(cascade = CascadeType.ALL )
     @JoinColumn(name = "subordinado_a", columnDefinition = "integer")
     private Conselho subordinadoA;
