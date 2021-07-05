@@ -48,3 +48,19 @@ Modelo ER: docs/db/dasa.vpp (Arquivo Visual Paradigm - [diponível aqui](https:/
 Todas as tabelas serão construídas em tempo de execução ( usando liquibase ). As tabelas de controle se encontram
 no schema público e as tabelas do sistema no schema `receituário`. 
 
+As migrações encontram-se em: dasa-recetuario-models/src/main/resources/br/com/tamanhofamilia/dasa/receituario/db/changelog/db.changelog-master.xml
+
+
+## Rodando o sistema
+
+Por se tratar de uma aplicação spring-boot, segue as mesmas regras.
+
+1. Cerfique-se que tenha o banco rodando e configurado, ou use o docker-compose anexado
+2. Se as configurações diferirem do padrão, configure conforme exposto anteriormente,
+3. instale as depenencias: `mvn install`
+4. Escolha a aplicação e chame o maven:
+   `
+   cd dasa-receituario-rest
+   mvn spring-boot:run
+   `
+
