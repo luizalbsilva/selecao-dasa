@@ -59,8 +59,9 @@ Por se tratar de uma aplicação spring-boot, segue as mesmas regras.
 2. Se as configurações diferirem do padrão, configure conforme exposto anteriormente,
 3. instale as depenencias: `mvn install`
 4. Escolha a aplicação e chame o maven:
-   `
-   cd dasa-receituario-rest
-   mvn spring-boot:run
-   `
+
+`cd dasa-receituario-rest`
+
+`mvn spring-boot:run`
+
 
