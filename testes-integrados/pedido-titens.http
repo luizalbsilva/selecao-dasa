@@ -10,7 +10,9 @@ Accept: application/json
   "nomeMae": "Maria das Dores",
   "endereco": {
     "rua": "Rua Domingues Dias, 21",
-    "bairro": "Morumbi"
+    "bairro": "Morumbi",
+    "uf": "SP",
+    "cidade": "São Paulo"
   },
   "telefone": "113654252",
   "mobile": "11960678521",

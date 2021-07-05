@@ -26,7 +26,9 @@ Accept: application/json
   "nomeMae": "Maria das Dores",
   "endereco": {
     "rua": "Rua Domingues Dias, 21",
-    "bairro": "Morumbi"
+    "bairro": "Morumbi",
+    "cidade": "São Paulo",
+    "uf": "SP"
   },
   "telefone": "113654252",
   "mobile": "11960678521",
@@ -87,7 +89,9 @@ Accept: application/json
   "nomeMae": "Mario das Dores",
   "endereco": {
     "rua": "Rua Domingues Dias, 211",
-    "bairro": "Jdm Morumbi"
+    "bairro": "Jdm Morumbi",
+    "cidade": "Rio de Janeiro",
+    "uf": "RJ"
   },
   "telefone": "113654250",
   "mobile": "11960678520",
@@ -178,21 +182,23 @@ Accept: application/json
 Content-Type: application/json
 
 {
-"nome": "Nathy",
-"nascimento": "1985-07-15",
-"sexo": "FEMININO",
-"nomeMae": "Maria das Dores",
-"endereco": {
-"rua": "Rua Domingues Dias, 21",
-"bairro": "Morumbi"
-},
-"telefone": "113654252",
-"mobile": "11960678521",
-"email": "ask@me.com",
-"documentos": {
-"rg": "284094784",
-"cpf": "30277488532"
-}
+  "nome": "Nathy",
+  "nascimento": "1985-07-15",
+  "sexo": "FEMININO",
+  "nomeMae": "Maria das Dores",
+  "endereco": {
+    "rua": "Rua Domingues Dias, 21",
+    "bairro": "Morumbi",
+    "uf": "SP",
+    "cidade": "São Paulo"
+  },
+  "telefone": "113654252",
+  "mobile": "11960678521",
+  "email": "ask@me.com",
+  "documentos": {
+    "rg": "284094784",
+    "cpf": "30277488532"
+  }
 }
 
 > {%
