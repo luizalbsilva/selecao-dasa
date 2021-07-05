@@ -43,7 +43,10 @@ class MedicosServiceTest {
 
     @Test
     void create() {
-        Medico medico = new Medico();
+        final int idConselho = 12;
+        when(conselhoDao.existsById(idConselho))
+                .thenReturn(true);
+        Medico medico = Medico.builder().conselho(Conselho.builder().idConselho(idConselho).build()).build();
         when(medicoDao.save(medico)).thenAnswer(e -> {
             Medico exam = e.getArgument(0);
             exam.setIdMedico(1);
@@ -60,8 +63,10 @@ class MedicosServiceTest {
     @Test
     void update() throws DataNotFoundException {
         final int id = 1;
+        final int idConselho = 13;
+        when(conselhoDao.existsById(idConselho)).thenReturn(true);
         when(medicoDao.existsById(id)).thenReturn(true);
-        Medico medico = Medico.builder().idMedico(id).build();
+        Medico medico = Medico.builder().idMedico(id).conselho(Conselho.builder().idConselho(idConselho).build()).build();
 
         service.update(medico);
 
@@ -70,7 +75,9 @@ class MedicosServiceTest {
 
     @Test
     void updateNotFound() {
-        Medico medico = Medico.builder().idMedico(1).build();
+        final int idConselho = 14;
+        when(conselhoDao.existsById(idConselho)).thenReturn(true);
+        Medico medico = Medico.builder().idMedico(1).conselho(Conselho.builder().idConselho(idConselho).build()).build();
 
         assertThrows(DataNotFoundException.class, () -> {
             service.update(medico);

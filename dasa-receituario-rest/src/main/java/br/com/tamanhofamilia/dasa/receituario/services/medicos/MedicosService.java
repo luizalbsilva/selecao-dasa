@@ -19,10 +19,13 @@ import java.util.Optional;
 public class MedicosService implements IMedicosService {
     /** Dao de acesso aos dados de médicos */
     private final MedicoDao medicoDao;
+    /** Dao de acesso aos dados de conselho */
+    private final ConselhoDao conselhoDao;
 
     @Autowired
-    public MedicosService(MedicoDao medicoDao) {
+    public MedicosService(MedicoDao medicoDao, ConselhoDao conselhoDao) {
         this.medicoDao = medicoDao;
+        this.conselhoDao = conselhoDao;
     }
 
     /** {@inheritDoc} */
@@ -33,19 +36,27 @@ public class MedicosService implements IMedicosService {
 
     /** {@inheritDoc} */
     @Override
-    public @NonNull Integer create(Medico data) {
-        final Medico saved = medicoDao.save(data);
+    public @NonNull Integer create(Medico medico) {
+        checaDadosRelacionados(medico);
+        final Medico saved = medicoDao.save(medico);
         return saved.getIdMedico();
+    }
+
+    private void checaDadosRelacionados(Medico data) {
+        if (! conselhoDao.existsById(data.getConselho().getIdConselho())) {
+            throw new DataNotFoundException(String.format("Conselho não encontrado: ", data.getConselho().getIdConselho()));
+        }
     }
 
     /** {@inheritDoc} */
     @Override
-    public void update(Medico data) throws DataNotFoundException {
-        if (!medicoDao.existsById(data.getIdMedico())) {
-            throw new DataNotFoundException(String.format("Medico não encontrado. Id: %d", data.getIdMedico()));
+    public void update(Medico medico) throws DataNotFoundException {
+        checaDadosRelacionados(medico);
+        if (!medicoDao.existsById(medico.getIdMedico())) {
+            throw new DataNotFoundException(String.format("Medico não encontrado. Id: %d", medico.getIdMedico()));
         }
 
-        medicoDao.save(data);
+        medicoDao.save(medico);
     }
 
     /** {@inheritDoc} */

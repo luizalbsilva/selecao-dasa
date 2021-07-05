@@ -1,6 +1,6 @@
 package br.com.tamanhofamilia.dasa.receituario.services;
 
-public class DataNotFoundException extends Exception {
+public class DataNotFoundException extends RuntimeException {
     public DataNotFoundException() {
     }
 

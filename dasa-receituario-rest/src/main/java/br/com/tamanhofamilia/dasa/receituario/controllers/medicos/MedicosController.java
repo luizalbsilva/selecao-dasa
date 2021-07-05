@@ -86,15 +86,21 @@ public class MedicosController {
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Recurso criado"),
             @ApiResponse(code = 400, message = "Erro na estrutura / dados enviados"),
+            @ApiResponse(code = 412, message = "Dado faltando em tabela relacionada"),
             @ApiResponse(code = 500, message = "Foi gerada uma exceção"),
     })
     @PostMapping
     public ResponseEntity<Void> create(@Valid @RequestBody Medico medico) {
         LOGGER.trace("Criando médico: {}", medico);
 
-        var id = service.create(medico);
-        LOGGER.debug("Criado id {} para médico: {}", id, medico);
-        return ResponseEntity.created(URI.create(String.format("%s/%s", URL_BASE, id))).build();
+        try {
+            var id = service.create(medico);
+            LOGGER.debug("Criado id {} para médico: {}", id, medico);
+            return ResponseEntity.created(URI.create(String.format("%s/%s", URL_BASE, id))).build();
+        } catch (DataNotFoundException e) {
+            LOGGER.error("Identificador de Conselho não encontrado. Dados: {}", medico);
+            return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();
+        }
     }
 
     /**
@@ -107,7 +113,7 @@ public class MedicosController {
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "Dados alterados"),
             @ApiResponse(code = 400, message = "Erro na estrutura / dados enviados"),
-            @ApiResponse(code = 412, message = "Não foi encontrado o registro para ser alterado"),
+            @ApiResponse(code = 412, message = "Não foi encontrado o registro para ser alterado ou em tabela relacionada"),
             @ApiResponse(code = 500, message = "Foi gerada uma exceção"),
     })
     @PutMapping("/{id}")
