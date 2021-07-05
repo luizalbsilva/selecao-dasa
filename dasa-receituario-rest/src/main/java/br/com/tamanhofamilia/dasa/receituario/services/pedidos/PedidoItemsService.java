@@ -3,7 +3,6 @@ package br.com.tamanhofamilia.dasa.receituario.services.pedidos;
 import br.com.tamanhofamilia.dasa.receituario.daos.exame.ExameDao;
 import br.com.tamanhofamilia.dasa.receituario.daos.pedidos.PedidoDao;
 import br.com.tamanhofamilia.dasa.receituario.daos.pedidos.PedidoItemDao;
-import br.com.tamanhofamilia.dasa.receituario.models.exame.Exame;
 import br.com.tamanhofamilia.dasa.receituario.models.pedidos.PedidoItem;
 import br.com.tamanhofamilia.dasa.receituario.services.DataNotFoundException;
 import lombok.NonNull;

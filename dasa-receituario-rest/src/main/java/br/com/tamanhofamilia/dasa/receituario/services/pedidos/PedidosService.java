@@ -40,7 +40,7 @@ public class PedidosService implements IPedidosService {
     @Override
     public Integer create(Pedido data) {
         checaDadosRelacionados(data);
-        final Pedido saved = pedidoDao.save(data);
+        final var saved = pedidoDao.save(data);
         return saved.getIdPedido();
     }
 

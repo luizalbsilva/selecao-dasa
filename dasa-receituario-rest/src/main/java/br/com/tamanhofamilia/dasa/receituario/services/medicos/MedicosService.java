@@ -38,13 +38,13 @@ public class MedicosService implements IMedicosService {
     @Override
     public @NonNull Integer create(Medico medico) {
         checaDadosRelacionados(medico);
-        final Medico saved = medicoDao.save(medico);
+        final var saved = medicoDao.save(medico);
         return saved.getIdMedico();
     }
 
     private void checaDadosRelacionados(Medico data) {
         if (! conselhoDao.existsById(data.getConselho().getIdConselho())) {
-            throw new DataNotFoundException(String.format("Conselho não encontrado: ", data.getConselho().getIdConselho()));
+            throw new DataNotFoundException(String.format("Conselho não encontrado: %d", data.getConselho().getIdConselho()));
         }
     }
 
