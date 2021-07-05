@@ -79,7 +79,7 @@ public class PedidoItemsController {
         pedidoItem.getPedido().setIdPedido(idPedido);
 
         var id = pedidoItemsService.create(pedidoItem);
-        return ResponseEntity.created(URI.create(String.format("%s/%s", URL_BASE, id))).build();
+        return ResponseEntity.created(URI.create(String.format("%s/%s/items/%s", URL_BASE, idPedido, id))).build();
     }
 
     @ApiOperation("Altera um determinado item de pedido")

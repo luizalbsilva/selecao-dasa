@@ -1,6 +1,8 @@
 package br.com.tamanhofamilia.dasa.receituario.services.medicos;
 
+import br.com.tamanhofamilia.dasa.receituario.daos.medico.ConselhoDao;
 import br.com.tamanhofamilia.dasa.receituario.daos.medico.MedicoDao;
+import br.com.tamanhofamilia.dasa.receituario.models.medico.Conselho;
 import br.com.tamanhofamilia.dasa.receituario.models.medico.Medico;
 import br.com.tamanhofamilia.dasa.receituario.services.DataNotFoundException;
 import org.junit.jupiter.api.Test;
@@ -14,6 +16,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -23,7 +26,10 @@ class MedicosServiceTest {
     MedicosService service;
 
     @Mock
-    MedicoDao dao;
+    MedicoDao medicoDao;
+
+    @Mock
+    ConselhoDao conselhoDao;
 
     @Mock
     Pageable pageable;
@@ -32,13 +38,13 @@ class MedicosServiceTest {
     void findAll() {
         service.findAll(pageable);
 
-        verify(dao).findAll(pageable);
+        verify(medicoDao).findAll(pageable);
     }
 
     @Test
     void create() {
         Medico medico = new Medico();
-        when(dao.save(medico)).thenAnswer(e -> {
+        when(medicoDao.save(medico)).thenAnswer(e -> {
             Medico exam = e.getArgument(0);
             exam.setIdMedico(1);
             return exam;
@@ -46,7 +52,7 @@ class MedicosServiceTest {
 
         assertSame(1, service.create(medico));
 
-        verify(dao).save(medico);
+        verify(medicoDao).save(medico);
 
     }
 
@@ -54,12 +60,12 @@ class MedicosServiceTest {
     @Test
     void update() throws DataNotFoundException {
         final int id = 1;
-        when(dao.existsById(id)).thenReturn(true);
+        when(medicoDao.existsById(id)).thenReturn(true);
         Medico medico = Medico.builder().idMedico(id).build();
 
         service.update(medico);
 
-        verify(dao).save(medico);
+        verify(medicoDao).save(medico);
     }
 
     @Test
@@ -75,30 +81,30 @@ class MedicosServiceTest {
     void getById() {
         final int id = 1;
         final Optional<Medico> daoReturn = Optional.empty();
-        when(dao.findById(id)).thenReturn(daoReturn);
+        when(medicoDao.findById(id)).thenReturn(daoReturn);
 
         final Optional<Medico> toCheck = service.getById(id);
 
         assertSame(daoReturn, toCheck);
-        verify(dao).findById(id);
+        verify(medicoDao).findById(id);
     }
 
     @Test
     void delete() throws DataNotFoundException {
         final int id = 1;
-        when(dao.existsById(id))
+        when(medicoDao.existsById(id))
                 .thenReturn(true);
 
         service.delete(id);
 
-        verify(dao).deleteById(id);
+        verify(medicoDao).deleteById(id);
     }
 
     @Test
     void deleteNotFound() {
         assertThrows(DataNotFoundException.class, () -> {
             final int id = 1;
-            when(dao.existsById(id))
+            when(medicoDao.existsById(id))
                     .thenReturn(false);
             service.delete(id);
         });

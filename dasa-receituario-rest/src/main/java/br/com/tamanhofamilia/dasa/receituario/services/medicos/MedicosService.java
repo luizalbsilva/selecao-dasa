@@ -1,5 +1,6 @@
 package br.com.tamanhofamilia.dasa.receituario.services.medicos;
 
+import br.com.tamanhofamilia.dasa.receituario.daos.medico.ConselhoDao;
 import br.com.tamanhofamilia.dasa.receituario.daos.medico.MedicoDao;
 import br.com.tamanhofamilia.dasa.receituario.models.medico.Medico;
 import br.com.tamanhofamilia.dasa.receituario.services.DataNotFoundException;
@@ -13,42 +14,54 @@ import java.util.Optional;
 
 @Service
 public class MedicosService implements IMedicosService {
-    private final MedicoDao dao;
+    private final MedicoDao medicoDao;
+    private final ConselhoDao conselhoDao;
 
     @Autowired
-    public MedicosService(MedicoDao dao) {
-        this.dao = dao;
+    public MedicosService(MedicoDao medicoDao, ConselhoDao conselhoDao) {
+        this.medicoDao = medicoDao;
+        this.conselhoDao = conselhoDao;
     }
 
     @Override
     public Page<Medico> findAll(Pageable pageable) {
-        return dao.findAll(pageable);
+        return medicoDao.findAll(pageable);
     }
 
     @Override
     public @NonNull Integer create(Medico medico) {
-        final Medico saved = dao.save(medico);
+        loadData(medico);
+        final Medico saved = medicoDao.save(medico);
         return saved.getIdMedico();
+    }
+
+    private void loadData(Medico medico) {
+        if (medico.getConselho() != null && medico.getConselho().getIdConselho() != null) {
+            conselhoDao.findById(medico.getConselho().getIdConselho())
+                    .ifPresent(medico::setConselho);
+        }
     }
 
     @Override
     public void update(Medico medico) throws DataNotFoundException {
-        if ( !dao.existsById(medico.getIdMedico()) ) {
+        if ( !medicoDao.existsById(medico.getIdMedico()) ) {
             throw new DataNotFoundException(String.format("Medico não encontrado. Id: %d", medico.getIdMedico()) );
         }
-        dao.save(medico);
+
+        loadData(medico);
+        medicoDao.save(medico);
     }
 
     @Override
     public Optional<Medico> getById(@NonNull Integer id) {
-        return dao.findById(id);
+        return medicoDao.findById(id);
     }
 
     @Override
     public void delete(@NonNull Integer id) throws DataNotFoundException {
-        if (!dao.existsById(id)) {
+        if (!medicoDao.existsById(id)) {
             throw new DataNotFoundException(String.format("Medico não encontrado. Id: %d", id) );
         }
-        dao.deleteById(id);
+        medicoDao.deleteById(id);
     }
 }

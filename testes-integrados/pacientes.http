@@ -1,0 +1,202 @@
+// @no-log
+// @no-redirect
+// @no-cookie-jar
+GET http://localhost:8080/api/v1/pacientes
+Accept: application/json
+
+> {%
+ client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+ });
+
+ %}
+
+###
+// @no-log
+// @no-redirect
+// @no-cookie-jar
+POST http://localhost:8080/api/v1/pacientes
+Content-Type: application/json
+Accept: application/json
+
+{
+  "nome": "Nathy",
+  "nascimento": "1985-07-15",
+  "sexo": "FEMININO",
+  "nomeMae": "Maria das Dores",
+  "endereco": {
+    "rua": "Rua Domingues Dias, 21",
+    "bairro": "Morumbi"
+  },
+  "telefone": "113654252",
+  "mobile": "11960678521",
+  "email": "ask@me.com",
+  "documentos": {
+    "rg": "284094784",
+    "cpf": "30277488532"
+  }
+}
+
+> {%
+ client.test("Request executed successfully", function() {
+        client.assert(response.status === 201, "Response status is not 201");
+ });
+
+ client.global.set("local", response.headers.valuesOf("Location")[0]);
+ %}
+
+
+###
+// @no-log
+// @no-redirect
+// @no-cookie-jar
+GET http://localhost:8080{{local}}
+Accept: application/json
+
+> {%
+ client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+ client.test("Request executed successfully", function() {
+        client.assert(response.body.nome === "Nathy" , "Registro diferente");
+        client.assert(response.body.nascimento === "1985-07-15" , "Registro diferente");
+        client.assert(response.body.sexo === 'FEMININO' , "Registro diferente");
+        client.assert(response.body.nomeMae === 'Maria das Dores' , "Registro diferente");
+        client.assert(response.body.endereco.rua === "Rua Domingues Dias, 21" , "Registro diferente");
+        client.assert(response.body.endereco.bairro === "Morumbi" , "Registro diferente");
+        client.assert(response.body.telefone === "113654252" , "Registro diferente");
+        client.assert(response.body.mobile === "11960678521" , "Registro diferente");
+        client.assert(response.body.email === "ask@me.com" , "Registro diferente");
+        client.assert(response.body.documentos.rg === "284094784" , "Registro diferente");
+        client.assert(response.body.documentos.cpf === "30277488532" , "Registro diferente");
+    });
+ %}
+
+###
+// @no-log
+// @no-redirect
+// @no-cookie-jar
+PUT http://localhost:8080{{local}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "nome": "San Martin",
+  "nascimento": "1965-07-15",
+  "sexo": "MASCULINO",
+  "nomeMae": "Mario das Dores",
+  "endereco": {
+    "rua": "Rua Domingues Dias, 211",
+    "bairro": "Jdm Morumbi"
+  },
+  "telefone": "113654250",
+  "mobile": "11960678520",
+  "email": "dont.ask@me.com",
+  "documentos": {
+    "rg": "284094781",
+    "cpf": "30277488531"
+  }
+}
+
+> {%
+ client.test("Request executed successfully", function() {
+        client.assert(response.status === 204, "Response status is not 204");
+    });
+ %}
+
+###
+// @no-log
+// @no-redirect
+// @no-cookie-jar
+GET http://localhost:8080{{local}}
+Accept: application/json
+
+> {%
+ client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+ client.test("Request executed successfully", function() {
+        client.assert(response.body.nome === "San Martin" , "Registro diferente");
+        client.assert(response.body.nascimento === "1965-07-15" , "Registro diferente");
+        client.assert(response.body.sexo === 'MASCULINO' , "Registro diferente");
+        client.assert(response.body.nomeMae === 'Mario das Dores' , "Registro diferente");
+        client.assert(response.body.endereco.rua === "Rua Domingues Dias, 211" , "Registro diferente");
+        client.assert(response.body.endereco.bairro === "Jdm Morumbi" , "Registro diferente");
+        client.assert(response.body.telefone === "113654250" , "Registro diferente");
+        client.assert(response.body.mobile === "11960678520" , "Registro diferente");
+        client.assert(response.body.email === "dont.ask@me.com" , "Registro diferente");
+        client.assert(response.body.documentos.rg === "284094781" , "Registro diferente");
+        client.assert(response.body.documentos.cpf === "30277488531" , "Registro diferente");
+    });
+ %}
+
+###
+// @no-log
+// @no-redirect
+// @no-cookie-jar
+DELETE http://localhost:8080{{local}}
+Accept: application/json
+
+> {%
+ client.test("Request executed successfully", function() {
+        client.assert(response.status === 204, "Response status is not 204");
+    });
+ %}
+
+###
+// @no-log
+// @no-redirect
+// @no-cookie-jar
+GET http://localhost:8080{{local}}
+Accept: application/json
+
+> {%
+ client.test("Request executed successfully", function() {
+        client.assert(response.status === 204, "Response status is not 204");
+    });
+ %}
+
+###
+// @no-log
+// @no-redirect
+// @no-cookie-jar
+DELETE http://localhost:8080{{local}}
+Accept: application/json
+
+> {%
+ client.test("Request executed successfully", function() {
+        client.assert(response.status === 412, "Response status is not 412");
+    });
+ %}
+
+###
+// @no-log
+// @no-redirect
+// @no-cookie-jar
+PUT http://localhost:8080{{local}}
+Accept: application/json
+Content-Type: application/json
+
+{
+"nome": "Nathy",
+"nascimento": "1985-07-15",
+"sexo": "FEMININO",
+"nomeMae": "Maria das Dores",
+"endereco": {
+"rua": "Rua Domingues Dias, 21",
+"bairro": "Morumbi"
+},
+"telefone": "113654252",
+"mobile": "11960678521",
+"email": "ask@me.com",
+"documentos": {
+"rg": "284094784",
+"cpf": "30277488532"
+}
+}
+
+> {%
+ client.test("Request executed successfully", function() {
+        client.assert(response.status === 412, "Response status is not 412");
+    });
+ %}

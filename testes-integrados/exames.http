@@ -1,0 +1,140 @@
+// @no-log
+// @no-redirect
+// @no-cookie-jar
+GET http://localhost:8080/api/v1/exames
+Accept: application/json
+
+> {%
+ client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+ });
+
+ %}
+
+###
+// @no-log
+// @no-redirect
+// @no-cookie-jar
+POST http://localhost:8080/api/v1/exames
+Content-Type: application/json
+Accept: application/json
+
+{
+  "descricao": "Hemograma simples"
+}
+
+> {%
+ client.test("Request executed successfully", function() {
+        client.assert(response.status === 201, "Response status is not 201");
+ });
+
+ client.global.set("local", response.headers.valuesOf("Location")[0]);
+ %}
+
+
+###
+// @no-log
+// @no-redirect
+// @no-cookie-jar
+GET http://localhost:8080{{local}}
+Accept: application/json
+
+> {%
+ client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+ client.test("Request executed successfully", function() {
+        client.assert(response.body.descricao === 'Hemograma simples' , "Registro diferente");
+    });
+ %}
+
+###
+// @no-log
+// @no-redirect
+// @no-cookie-jar
+PUT http://localhost:8080{{local}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "descricao": "Hemograma Completo"
+}
+
+> {%
+ client.test("Request executed successfully", function() {
+        client.assert(response.status === 204, "Response status is not 204");
+    });
+ %}
+
+###
+// @no-log
+// @no-redirect
+// @no-cookie-jar
+GET http://localhost:8080{{local}}
+Accept: application/json
+
+> {%
+ client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+ client.test("Request executed successfully", function() {
+        client.assert(response.body.descricao === 'Hemograma Completo' , "Registro diferente");
+    });
+ %}
+
+###
+// @no-log
+// @no-redirect
+// @no-cookie-jar
+DELETE http://localhost:8080{{local}}
+Accept: application/json
+
+> {%
+ client.test("Request executed successfully", function() {
+        client.assert(response.status === 204, "Response status is not 204");
+    });
+ %}
+
+###
+// @no-log
+// @no-redirect
+// @no-cookie-jar
+GET http://localhost:8080{{local}}
+Accept: application/json
+
+> {%
+ client.test("Request executed successfully", function() {
+        client.assert(response.status === 204, "Response status is not 204");
+    });
+ %}
+
+###
+// @no-log
+// @no-redirect
+// @no-cookie-jar
+DELETE http://localhost:8080{{local}}
+Accept: application/json
+
+> {%
+ client.test("Request executed successfully", function() {
+        client.assert(response.status === 412, "Response status is not 412");
+    });
+ %}
+
+###
+// @no-log
+// @no-redirect
+// @no-cookie-jar
+PUT http://localhost:8080{{local}}
+Accept: application/json
+Content-Type: application/json
+
+{
+  "descricao": "Hemograma simples"
+}
+
+> {%
+ client.test("Request executed successfully", function() {
+        client.assert(response.status === 412, "Response status is not 412");
+    });
+ %}
