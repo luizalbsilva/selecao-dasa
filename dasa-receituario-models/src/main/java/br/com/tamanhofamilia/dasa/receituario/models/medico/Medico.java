@@ -21,6 +21,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+/** Entidade representando o médico */
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -30,24 +31,28 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(schema = TableHelper.TABLE_SCHEMA, name = "medicos")
 public class Medico {
+    /** Identificador do registro */
     @ApiModelProperty("Identificador do Médico")
     @Id
     @Column(name = "id_medico", columnDefinition = "SERIAL", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idMedico;
 
+    /** Numero do conselho profissional */
     @ApiModelProperty("Número no Conselho Profissional")
     @NotNull
     @Min(1)
     @Column(name = "numero_conselho", nullable = false)
     private Long numeroConselho;
 
+    /** União Federativa do Conselho Regional */
     @ApiModelProperty("UF do Conselho Regional")
     @NotNull
     @Length(min = 2, max = 2)
     @Column(name = "uf_conselho", length = 2, nullable = false)
     private String ufConselho;
 
+    /** Identificador do conselho */
     @ApiModelProperty("Identificador do Conselho")
     @NotNull
     @ManyToOne(optional = false)

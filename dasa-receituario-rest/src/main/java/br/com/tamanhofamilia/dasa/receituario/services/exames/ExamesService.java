@@ -11,8 +11,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+/** Serviço de exame */
 @Service
 public class ExamesService implements IExamesService {
+    /** Dao de acesso aos dados de Exames */
     private final ExameDao dao;
 
     @Autowired
@@ -20,30 +22,35 @@ public class ExamesService implements IExamesService {
         this.dao = dao;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Page<Exame> findAll(Pageable pageable) {
         return dao.findAll(pageable);
     }
 
+    /** {@inheritDoc} */
     @Override
-    public Integer create(Exame exame) {
-        final Exame saved = dao.save(exame);
+    public Integer create(Exame data) {
+        final Exame saved = dao.save(data);
         return saved.getIdExame();
     }
 
+    /** {@inheritDoc} */
     @Override
-    public void update(Exame exame) throws DataNotFoundException {
-        if ( !dao.existsById(exame.getIdExame()) ) {
-            throw new DataNotFoundException(String.format("Exame não encontrado. Id: %d", exame.getIdExame()) );
+    public void update(Exame data) throws DataNotFoundException {
+        if ( !dao.existsById(data.getIdExame()) ) {
+            throw new DataNotFoundException(String.format("Exame não encontrado. Id: %d", data.getIdExame()) );
         }
-        dao.save(exame);
+        dao.save(data);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Optional<Exame> getById(@NonNull Integer id) {
         return dao.findById(id);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void delete(@NonNull Integer id) throws DataNotFoundException {
         if (!dao.existsById(id)) {

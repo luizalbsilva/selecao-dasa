@@ -22,6 +22,9 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
+/**
+ * Conselho Profissional
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -31,20 +34,23 @@ import java.io.Serializable;
 @Entity
 @Table(schema = TableHelper.TABLE_SCHEMA, name = "conselhos")
 public class Conselho implements Serializable {
+    /** Identificador do Registro */
     @ApiModelProperty("Identificador do Conselho Profissional")
     @Id
     @Column(name = "id_conselho", columnDefinition = "SERIAL", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idConselho;
 
+    /** Nome do Conselho Profissional. Ex: CRM */
     @ApiModelProperty("Nome do Conselho")
     @NotNull
-    @Length(min=2, max = 255)
+    @Length(min = 2, max = 255)
     @Column(columnDefinition = "varchar(255) NOT NULL", nullable = false, unique = true)
     private String nome;
 
+    /** Orgão ao qual está subordinado. Ex: CRM está subordinado ao CFM */
     @ApiModelProperty("Identificador ao Conselho ao qual está subordinado")
-    @ManyToOne(cascade = CascadeType.ALL )
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "subordinado_a", columnDefinition = "integer")
     private Conselho subordinadoA;
 }

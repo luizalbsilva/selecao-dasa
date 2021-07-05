@@ -9,6 +9,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
@@ -27,15 +29,20 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.Optional;
 
+/**
+ * Controller de pacientes
+ */
 @Api(
         consumes = "application/json",
-        produces = "application/json",
-        value = "Manipulação dos dados de Exames"
+        produces = "application/json"
 )
 @RestController
 @RequestMapping(PacientesController.URL_BASE)
 public class PacientesController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(PacientesController.class);
     public static final String URL_BASE = "/api/v1/pacientes";
+
+    /** Serviço de pacientes */
     private IPacientesService pacientesService;
 
     @Autowired
@@ -43,6 +50,13 @@ public class PacientesController {
         this.pacientesService = pacientesService;
     }
 
+    /**
+     * Lista todos os pacientes no sistema
+     * @param startPage Página inicial
+     * @param pgSize Tamanho da página
+     * @param sortField Campo de ordenação
+     * @return Lista dos pacientes, status 200
+     */
     @ApiOperation("Lista os dados de pacientes disponíveis no sistema")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Retorna a lista de pacientes"),
@@ -52,14 +66,20 @@ public class PacientesController {
     public Page<Paciente> readAll(
             @ApiParam("Página inicial")
             @Param("pgInit") Optional<Integer> startPage,
-            @ApiParam("Página final")
-            @Param("pgFim") Optional<Integer> endPage,
+            @ApiParam("Itens por página")
+            @Param("pgSize") Optional<Integer> pgSize,
             @ApiParam("Campo de ordem")
             @Param("sortBy") Optional<String> sortField) {
-        var pageable = PageableHelper.create(startPage, endPage, sortField);
+        LOGGER.trace("Buscando todos os pacientes");
+        var pageable = PageableHelper.create(startPage, pgSize, sortField);
         return this.pacientesService.findAll(pageable);
     }
 
+    /**
+     * Cria novo paciente
+     * @param pacienteDto Dados do paciente
+     * @return status 201 + Location com localização do registro
+     */
     @ApiOperation("Cria novo paciente")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Recurso criado"),
@@ -68,10 +88,18 @@ public class PacientesController {
     })
     @PostMapping
     public ResponseEntity<Void> create(@Valid @RequestBody Paciente pacienteDto) {
+        LOGGER.trace("Criando paciente: {}", pacienteDto);
         var id = pacientesService.create(pacienteDto);
+        LOGGER.debug("Criado id {} para o paciente: {}", id, pacienteDto);
         return ResponseEntity.created(URI.create(String.format("%s/%s", URL_BASE, id))).build();
     }
 
+    /**
+     * Altera dados do paciente
+     * @param id Identificador do registro
+     * @param pacienteDto Dados do paciente
+     * @return Status 204 (sucesso), 412 (registro não encontrado)
+     */
     @ApiOperation("Altera um determinado paciente")
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "Dados alterados"),
@@ -84,14 +112,22 @@ public class PacientesController {
             @ApiParam("Identificador do Paciente")
             @PathVariable("id") int id, @Valid @RequestBody Paciente pacienteDto) {
         pacienteDto.setIdPaciente(id);
+        LOGGER.trace("Alterando Paciente: {}", pacienteDto);
         try {
             pacientesService.update(pacienteDto);
+            LOGGER.debug("Alterado Paciente: {}", pacienteDto);
             return ResponseEntity.noContent().build();
         } catch (DataNotFoundException e) {
+            LOGGER.error("Paciente não encontrado para alteração: {}", pacienteDto);
             return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();
         }
     }
 
+    /**
+     * Recupera os dados de um paciente
+     * @param id Identificador do registro
+     * @return Dados do paciente, status 200
+     */
     @ApiOperation("Recupera os dados de um paciente")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Retorna o exame requisitado"),
@@ -102,6 +138,8 @@ public class PacientesController {
     public ResponseEntity<Object> get(
             @ApiParam("Identificador do Paciente")
             @PathVariable("id") int id) {
+        LOGGER.trace("Busca Paciente: {}", id);
+
         final Optional<Paciente> paciente = pacientesService.getById(id);
         if (paciente.isEmpty()){
             return ResponseEntity.noContent().build();
@@ -109,6 +147,11 @@ public class PacientesController {
         return ResponseEntity.ok(paciente.get());
     }
 
+    /**
+     * Apaga os dados do paciente
+     * @param id Identificador do paciente
+     * @return status 204 (sucesso), 412( Registro não encontrado )
+     */
     @ApiOperation("Apaga dados de paciente")
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "Dados apagados"),
@@ -120,10 +163,14 @@ public class PacientesController {
     public ResponseEntity<Object> delete(
             @ApiParam("Identificador do Paciente")
             @PathVariable("id") int id) {
+        LOGGER.trace("Apagando Paciente: {}", id);
+
         try {
             pacientesService.delete(id);
+            LOGGER.debug("Apagado Paciente: {}", id);
             return ResponseEntity.noContent().build();
         } catch (DataNotFoundException e) {
+            LOGGER.error("Paciente não encontrado para exclusão: {}", id);
             return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();
         }
     }

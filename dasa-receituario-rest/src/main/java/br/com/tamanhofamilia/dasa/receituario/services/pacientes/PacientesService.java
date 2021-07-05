@@ -11,8 +11,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+/**
+ * Serviço de Pacientes
+ */
 @Service
 public class PacientesService implements IPacientesService {
+    /** Dao de acesso aos dados de paciente */
     private final PacienteDao dao;
 
     @Autowired
@@ -20,34 +24,39 @@ public class PacientesService implements IPacientesService {
         this.dao = dao;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Page<Paciente> findAll(Pageable pageable) {
         return dao.findAll(pageable);
     }
 
+    /** {@inheritDoc} */
     @Override
-    public Integer create(Paciente paciente) {
-        final Paciente saved = dao.save(paciente);
+    public Integer create(Paciente data) {
+        final Paciente saved = dao.save(data);
         return saved.getIdPaciente();
     }
 
+    /** {@inheritDoc} */
     @Override
-    public void update(Paciente paciente) throws DataNotFoundException {
-        if ( !dao.existsById(paciente.getIdPaciente()) ) {
-            throw new DataNotFoundException(String.format("Paciente não encontrado. Id: %d", paciente.getIdPaciente()) );
+    public void update(Paciente data) throws DataNotFoundException {
+        if (!dao.existsById(data.getIdPaciente())) {
+            throw new DataNotFoundException(String.format("Paciente não encontrado. Id: %d", data.getIdPaciente()));
         }
-        dao.save(paciente);
+        dao.save(data);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Optional<Paciente> getById(@NonNull Integer id) {
         return dao.findById(id);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void delete(@NonNull Integer id) throws DataNotFoundException {
         if (!dao.existsById(id)) {
-            throw new DataNotFoundException(String.format("Paciente não encontrado. Id: %d", id) );
+            throw new DataNotFoundException(String.format("Paciente não encontrado. Id: %d", id));
         }
         dao.deleteById(id);
     }

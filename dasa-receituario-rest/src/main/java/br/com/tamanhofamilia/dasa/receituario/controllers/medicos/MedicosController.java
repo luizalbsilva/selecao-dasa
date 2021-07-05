@@ -9,6 +9,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
@@ -27,6 +29,9 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.Optional;
 
+/**
+ * Controller de médicos
+ */
 @Api(
         consumes = "application/json",
         produces = "application/json",
@@ -35,7 +40,10 @@ import java.util.Optional;
 @RestController
 @RequestMapping(MedicosController.URL_BASE)
 public class MedicosController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MedicosController.class);
     public static final String URL_BASE = "/api/v1/medicos";
+
+    /** Serviço de médicos */
     private IMedicosService service;
 
     @Autowired
@@ -43,6 +51,13 @@ public class MedicosController {
         this.service = medicosService;
     }
 
+    /**
+     * Lista os médicos disponíveis no sistema
+     * @param startPage Página inicial
+     * @param pgSize Itens por página
+     * @param sortField Campo de ordenação
+     * @return Lista dos médicos, status 200
+     */
     @ApiOperation("Lista os médicos disponíveis no sistema")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Retorna a lista de médicos"),
@@ -52,15 +67,21 @@ public class MedicosController {
     public Page<Medico> readAll(
             @ApiParam("Página inicial")
             @Param("pgInit") Optional<Integer> startPage,
-            @ApiParam("Página final")
-            @Param("pgFim") Optional<Integer> endPage,
+            @ApiParam("Itens por página")
+            @Param("pgSize") Optional<Integer> pgSize,
             @ApiParam("Campo de ordem")
             @Param("sortBy") Optional<String> sortField) {
+        LOGGER.trace("Recuperando todos os médicos");
 
-        var pageable = PageableHelper.create(startPage, endPage, sortField);
+        var pageable = PageableHelper.create(startPage, pgSize, sortField);
         return this.service.findAll(pageable);
     }
 
+    /**
+     * Cria novo registro de médico
+     * @param medico Dados do médico
+     * @return Location do registro, status 201
+     */
     @ApiOperation("Cria novo médico")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Recurso criado"),
@@ -69,10 +90,19 @@ public class MedicosController {
     })
     @PostMapping
     public ResponseEntity<Void> create(@Valid @RequestBody Medico medico) {
+        LOGGER.trace("Criando médico: {}", medico);
+
         var id = service.create(medico);
+        LOGGER.debug("Criado id {} para médico: {}", id, medico);
         return ResponseEntity.created(URI.create(String.format("%s/%s", URL_BASE, id))).build();
     }
 
+    /**
+     * Altera dados de um médico
+     * @param id Identificador do médico
+     * @param medico Dados do médico
+     * @return status 204 se for alterado, 412 se não for encontrado
+     */
     @ApiOperation("Altera um determinado médico")
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "Dados alterados"),
@@ -86,17 +116,25 @@ public class MedicosController {
             @PathVariable("id") int id,
             @Valid @RequestBody Medico medico) {
         medico.setIdMedico(id);
+        LOGGER.trace("Alterando médico: {}", medico);
         try {
             service.update(medico);
+            LOGGER.debug("Alterado médico: {}", medico);
             return ResponseEntity.noContent().build();
         } catch (DataNotFoundException e) {
+            LOGGER.error("Médico não encontrado para alteração: {}", medico);
             return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();
         }
     }
 
+    /**
+     * Recupera dados de médico
+     * @param id Identificador de medico
+     * @return Dados do médico, status 200
+     */
     @ApiOperation("Recupera os dados de um médico")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Retorna o exame requisitado"),
+            @ApiResponse(code = 200, message = "Retorna o médico requisitado"),
             @ApiResponse(code = 204, message = "Dado não encontrado"),
             @ApiResponse(code = 500, message = "Foi gerada uma exceção"),
     })
@@ -111,6 +149,11 @@ public class MedicosController {
         return ResponseEntity.ok(medico.get());
     }
 
+    /**
+     * Apaga os dados do médico
+     * @param id Identificador do registro
+     * @return status 204(Sucesso), 412 se não for encontrado
+     */
     @ApiOperation("Apaga registro de um médico")
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "Dados apagados"),

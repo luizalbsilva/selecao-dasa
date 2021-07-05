@@ -6,9 +6,10 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/** Conversor LocalDateTime */
 @Component
 public class LocalDateTimeSpringConverter implements Converter<String, LocalDateTime> {
-
+    /** {@inheritDoc} */
     @Override
     public LocalDateTime convert(String value) {
         if(value != null) {

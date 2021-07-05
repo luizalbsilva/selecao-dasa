@@ -18,6 +18,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+/**
+ * Entidade Exame
+ */
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
@@ -27,15 +30,17 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(schema = TableHelper.TABLE_SCHEMA, name = "exames")
 public class Exame {
+    /** Identificador do registro */
     @ApiModelProperty("Identificador do Exame")
     @Id
     @Column(name = "id_exame", columnDefinition = "SERIAL", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idExame;
 
+    /** Descrição do exame. Ex: 'Hemograma Simples' */
     @ApiModelProperty("Descrição do Exame")
     @NotNull
     @Length(min = 5, max = 255)
-    @Column(name="descricao")
+    @Column(name = "descricao")
     private String descricao;
 }

@@ -22,6 +22,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
+/** Entidade que representa o Pedido */
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -31,23 +32,27 @@ import java.time.LocalDate;
 @Entity
 @Table(schema = TableHelper.TABLE_SCHEMA, name = "pedidos")
 public class Pedido {
+    /** Identificador do registro */
     @ApiModelProperty("Identificador do Pedido")
     @Id
     @Column(name = "id_pedido", columnDefinition = "SERIAL", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idPedido;
 
+    /** Data de validade do pedido */
     @ApiModelProperty("Data de Validade do Pedido")
     @NotNull
     @Column(name = "data_validade", columnDefinition = "DATE", nullable = false)
     private LocalDate dataValidade;
 
+    /** Médico que assina o pedido */
     @ApiModelProperty("Médico")
     @NotNull
     @ManyToOne(optional = false)
     @JoinColumn(name = "id_medico", columnDefinition = "integer")
     private Medico medico;
 
+    /** Paciente relacionado ao pedido */
     @ApiModelProperty("Paciente")
     @NotNull
     @ManyToOne(optional = false)

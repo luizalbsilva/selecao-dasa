@@ -11,8 +11,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+/**
+ * Serviço de Itens de pedido
+ */
 @Service
 public class PedidoItemsService implements IPedidoItemsService {
+    /** Dao de Itens de pedido */
     private final PedidoItemDao pedidoItemDao;
 
     @Autowired
@@ -20,38 +24,44 @@ public class PedidoItemsService implements IPedidoItemsService {
         this.pedidoItemDao = pedidoItemDao;
     }
 
+    /** {@inheritDoc */
     @Override
     public Page<PedidoItem> findAll(Pageable pageable) {
         return pedidoItemDao.findAll(pageable);
     }
 
+    /** {@inheritDoc */
     @Override
-    public Long create(PedidoItem pedidoItem) {
-        final var saved = pedidoItemDao.save(pedidoItem);
+    public Long create(PedidoItem data) {
+        final var saved = pedidoItemDao.save(data);
         return saved.getIdPedidoItem();
     }
 
+    /** {@inheritDoc */
     @Override
-    public void update(PedidoItem pedidoItem) throws DataNotFoundException {
-        if ( !pedidoItemDao.existsById(pedidoItem.getIdPedidoItem()) ) {
-            throw new DataNotFoundException(String.format("Item do Pedido não encontrado. Id: %d", pedidoItem.getIdPedidoItem()) );
+    public void update(PedidoItem data) throws DataNotFoundException {
+        if (!pedidoItemDao.existsById(data.getIdPedidoItem())) {
+            throw new DataNotFoundException(String.format("Item do Pedido não encontrado. Id: %d", data.getIdPedidoItem()));
         }
-        pedidoItemDao.save(pedidoItem);
+        pedidoItemDao.save(data);
     }
 
+    /** {@inheritDoc */
     @Override
     public Optional<PedidoItem> getById(@NonNull Long id) {
         return pedidoItemDao.findById(id);
     }
 
+    /** {@inheritDoc */
     @Override
     public void delete(@NonNull Long id) throws DataNotFoundException {
         if (!pedidoItemDao.existsById(id)) {
-            throw new DataNotFoundException(String.format("Item do Pedido não encontrado. Id: %d", id) );
+            throw new DataNotFoundException(String.format("Item do Pedido não encontrado. Id: %d", id));
         }
         pedidoItemDao.deleteById(id);
     }
 
+    /** {@inheritDoc */
     @Override
     public Page<PedidoItem> findAllFromPedido(int idPedido, Pageable pageable) {
         return pedidoItemDao.findByPedidoId(idPedido, pageable);

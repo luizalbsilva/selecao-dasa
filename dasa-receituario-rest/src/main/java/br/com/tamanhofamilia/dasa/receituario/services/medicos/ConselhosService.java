@@ -11,8 +11,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+/**
+ * Serviço de conselhos profissionais
+ */
 @Service
 public class ConselhosService implements IConselhosService {
+    /** Dao de acesso aos Conselhos Profissionais */
     private final ConselhoDao dao;
 
     @Autowired
@@ -20,35 +24,39 @@ public class ConselhosService implements IConselhosService {
         this.dao = dao;
     }
 
-
+    /** {@inheritDoc} */
     @Override
     public Page<Conselho> findAll(Pageable pageable) {
         return dao.findAll(pageable);
     }
 
+    /** {@inheritDoc} */
     @Override
-    public Integer create(Conselho conselho) {
-        final Conselho saved = dao.save(conselho);
+    public Integer create(Conselho data) {
+        final Conselho saved = dao.save(data);
         return saved.getIdConselho();
     }
 
+    /** {@inheritDoc} */
     @Override
-    public void update(Conselho conselho) throws DataNotFoundException {
-        if ( !dao.existsById(conselho.getIdConselho()) ) {
-            throw new DataNotFoundException(String.format("Exame não encontrado. Id: %d", conselho.getIdConselho()) );
+    public void update(Conselho data) throws DataNotFoundException {
+        if (!dao.existsById(data.getIdConselho())) {
+            throw new DataNotFoundException(String.format("Exame não encontrado. Id: %d", data.getIdConselho()));
         }
-        dao.save(conselho);
+        dao.save(data);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Optional<Conselho> getById(@NonNull Integer id) {
         return dao.findById(id);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void delete(@NonNull Integer id) throws DataNotFoundException {
         if (!dao.existsById(id)) {
-            throw new DataNotFoundException(String.format("Conselho não encontrado. Id: %d", id) );
+            throw new DataNotFoundException(String.format("Conselho não encontrado. Id: %d", id));
         }
         dao.deleteById(id);
     }

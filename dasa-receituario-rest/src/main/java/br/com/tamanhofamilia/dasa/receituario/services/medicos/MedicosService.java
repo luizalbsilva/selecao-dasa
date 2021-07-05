@@ -12,55 +12,53 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+/**
+ * Serviços de médicos
+ */
 @Service
 public class MedicosService implements IMedicosService {
+    /** Dao de acesso aos dados de médicos */
     private final MedicoDao medicoDao;
-    private final ConselhoDao conselhoDao;
 
     @Autowired
-    public MedicosService(MedicoDao medicoDao, ConselhoDao conselhoDao) {
+    public MedicosService(MedicoDao medicoDao) {
         this.medicoDao = medicoDao;
-        this.conselhoDao = conselhoDao;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Page<Medico> findAll(Pageable pageable) {
         return medicoDao.findAll(pageable);
     }
 
+    /** {@inheritDoc} */
     @Override
-    public @NonNull Integer create(Medico medico) {
-        loadData(medico);
-        final Medico saved = medicoDao.save(medico);
+    public @NonNull Integer create(Medico data) {
+        final Medico saved = medicoDao.save(data);
         return saved.getIdMedico();
     }
 
-    private void loadData(Medico medico) {
-        if (medico.getConselho() != null && medico.getConselho().getIdConselho() != null) {
-            conselhoDao.findById(medico.getConselho().getIdConselho())
-                    .ifPresent(medico::setConselho);
-        }
-    }
-
+    /** {@inheritDoc} */
     @Override
-    public void update(Medico medico) throws DataNotFoundException {
-        if ( !medicoDao.existsById(medico.getIdMedico()) ) {
-            throw new DataNotFoundException(String.format("Medico não encontrado. Id: %d", medico.getIdMedico()) );
+    public void update(Medico data) throws DataNotFoundException {
+        if (!medicoDao.existsById(data.getIdMedico())) {
+            throw new DataNotFoundException(String.format("Medico não encontrado. Id: %d", data.getIdMedico()));
         }
 
-        loadData(medico);
-        medicoDao.save(medico);
+        medicoDao.save(data);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Optional<Medico> getById(@NonNull Integer id) {
         return medicoDao.findById(id);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void delete(@NonNull Integer id) throws DataNotFoundException {
         if (!medicoDao.existsById(id)) {
-            throw new DataNotFoundException(String.format("Medico não encontrado. Id: %d", id) );
+            throw new DataNotFoundException(String.format("Medico não encontrado. Id: %d", id));
         }
         medicoDao.deleteById(id);
     }
