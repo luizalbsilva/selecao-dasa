@@ -1,5 +1,7 @@
 package br.com.tamanhofamilia.dasa.receituario.services.pedidos;
 
+import br.com.tamanhofamilia.dasa.receituario.daos.medico.MedicoDao;
+import br.com.tamanhofamilia.dasa.receituario.daos.paciente.PacienteDao;
 import br.com.tamanhofamilia.dasa.receituario.daos.pedidos.PedidoDao;
 import br.com.tamanhofamilia.dasa.receituario.models.pedidos.Pedido;
 import br.com.tamanhofamilia.dasa.receituario.services.DataNotFoundException;
@@ -15,47 +17,68 @@ import java.util.Optional;
 @Service
 public class PedidosService implements IPedidosService {
     /** Dao de acesso aos dados de Pedido */
-    private final PedidoDao dao;
+    private final PedidoDao pedidoDao;
+    /** Dao de acesso aos dados de Pacientes */
+    private final PacienteDao pacienteDao;
+    /** Dao de acesso aos dados de Médicos */
+    private final MedicoDao medicoDao;
 
     @Autowired
-    PedidosService(PedidoDao dao) {
-        this.dao = dao;
+    PedidosService(PedidoDao dao, PacienteDao pacienteDao, MedicoDao medicoDao) {
+        this.pedidoDao = dao;
+        this.pacienteDao = pacienteDao;
+        this.medicoDao = medicoDao;
     }
 
     /** {@inheritDoc */
     @Override
     public Page<Pedido> findAll(Pageable pageable) {
-        return dao.findAll(pageable);
+        return pedidoDao.findAll(pageable);
     }
 
     /** {@inheritDoc */
     @Override
     public Integer create(Pedido data) {
-        final Pedido saved = dao.save(data);
+        checaDadosRelacionados(data);
+        final Pedido saved = pedidoDao.save(data);
         return saved.getIdPedido();
     }
 
     /** {@inheritDoc */
     @Override
     public void update(Pedido data) throws DataNotFoundException {
-        if ( !dao.existsById(data.getIdPedido()) ) {
+        checaDadosRelacionados(data);
+        if ( !pedidoDao.existsById(data.getIdPedido()) ) {
             throw new DataNotFoundException(String.format("Pedido não encontrado. Id: %d", data.getIdPedido()) );
         }
-        dao.save(data);
+        pedidoDao.save(data);
+    }
+
+    private void checaDadosRelacionados(Pedido data) {
+        if (! medicoDao.existsById(data.getMedico().getIdMedico())){
+            throw new DataNotFoundException(
+                String.format("Dado de médico não encontrado.: %d. %s", data.getMedico().getIdMedico(), data)
+            );
+        }
+        if (! pacienteDao.existsById(data.getPaciente().getIdPaciente())){
+            throw new DataNotFoundException(
+                String.format("Dado de paciente não encontrado.: %d. %s", data.getPaciente().getIdPaciente(), data)
+            );
+        }
     }
 
     /** {@inheritDoc */
     @Override
     public Optional<Pedido> getById(@NonNull Integer id) {
-        return dao.findById(id);
+        return pedidoDao.findById(id);
     }
 
     /** {@inheritDoc */
     @Override
     public void delete(@NonNull Integer id) throws DataNotFoundException {
-        if (!dao.existsById(id)) {
+        if (!pedidoDao.existsById(id)) {
             throw new DataNotFoundException(String.format("Pedido não encontrado. Id: %d", id) );
         }
-        dao.deleteById(id);
+        pedidoDao.deleteById(id);
     }
 }

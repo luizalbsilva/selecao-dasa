@@ -120,7 +120,7 @@ public class ExamesController {
             LOGGER.debug("Exame alterado com sucesso: {}", exame);
             return ResponseEntity.noContent().build();
         } catch (DataNotFoundException e) {
-            LOGGER.error("Registro não encontrado para alteração. {}", exame);
+            LOGGER.error("Registro não encontrado para alteração. {}", exame, e);
             return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();
         }
     }
@@ -169,7 +169,7 @@ public class ExamesController {
             LOGGER.debug("Exame excluido com sucesso: {}", id);
             return ResponseEntity.noContent().build();
         } catch (DataNotFoundException e) {
-            LOGGER.error("Exame não existe: {}", id);
+            LOGGER.error("Exame não existe: {}", id, e);
             return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();
         }
     }

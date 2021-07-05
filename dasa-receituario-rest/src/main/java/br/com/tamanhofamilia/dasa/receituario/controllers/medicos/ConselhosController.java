@@ -119,7 +119,7 @@ public class ConselhosController {
             LOGGER.debug("Conselho trabalhista alterado: {}", conselho);
             return ResponseEntity.noContent().build();
         } catch (DataNotFoundException e) {
-            LOGGER.error("Conselho trabalhista não encontrado: {}", conselho);
+            LOGGER.error("Conselho trabalhista não encontrado: {}", conselho, e);
             return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();
         }
     }
@@ -170,7 +170,7 @@ public class ConselhosController {
             LOGGER.debug("Gravando conselho: {}", id);
             return ResponseEntity.noContent().build();
         } catch (DataNotFoundException e) {
-            LOGGER.error("Conselho não encontrado para exclusao: {}", id);
+            LOGGER.error("Conselho não encontrado para exclusao: {}", id, e);
             return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();
         }
     }

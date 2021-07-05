@@ -98,7 +98,7 @@ public class MedicosController {
             LOGGER.debug("Criado id {} para médico: {}", id, medico);
             return ResponseEntity.created(URI.create(String.format("%s/%s", URL_BASE, id))).build();
         } catch (DataNotFoundException e) {
-            LOGGER.error("Identificador de Conselho não encontrado. Dados: {}", medico);
+            LOGGER.error("Identificador de Conselho não encontrado. Dados: {}", medico, e);
             return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();
         }
     }
@@ -128,7 +128,7 @@ public class MedicosController {
             LOGGER.debug("Alterado médico: {}", medico);
             return ResponseEntity.noContent().build();
         } catch (DataNotFoundException e) {
-            LOGGER.error("Médico não encontrado para alteração: {}", medico);
+            LOGGER.error("Médico não encontrado para alteração: {}", medico, e);
             return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();
         }
     }

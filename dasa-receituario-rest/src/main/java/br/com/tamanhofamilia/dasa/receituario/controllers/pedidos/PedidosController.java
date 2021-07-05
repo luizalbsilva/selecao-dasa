@@ -83,14 +83,20 @@ public class PedidosController {
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Recurso criado"),
             @ApiResponse(code = 400, message = "Erro na estrutura / dados enviados"),
+            @ApiResponse(code = 412, message = "Dados em tabelas relacionadas inexistente"),
             @ApiResponse(code = 500, message = "Foi gerada uma exceção"),
     })
     @PostMapping
     public ResponseEntity<Void> create(@Valid @RequestBody Pedido pedido) {
         LOGGER.trace("Criando novo pedido: {}", pedido);
-        var id = pedidosService.create(pedido);
-        LOGGER.trace("Criado id {} para o novo pedido: {}", id, pedido);
-        return ResponseEntity.created(URI.create(String.format("%s/%s", URL_BASE, id))).build();
+        try {
+            var id = pedidosService.create(pedido);
+            LOGGER.trace("Criado id {} para o novo pedido: {}", id, pedido);
+            return ResponseEntity.created(URI.create(String.format("%s/%s", URL_BASE, id))).build();
+        } catch (DataNotFoundException e) {
+            LOGGER.error("Dados relacionados com problemas. {}", pedido, e);
+            return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();
+        }
     }
 
     /**
@@ -118,7 +124,7 @@ public class PedidosController {
             LOGGER.trace("Alterado o pedido: {}", pedido);
             return ResponseEntity.noContent().build();
         } catch (DataNotFoundException e) {
-            LOGGER.trace("Pedido não encontrado para alteração: {}", pedido);
+            LOGGER.trace("Pedido não encontrado para alteração: {}", pedido, e);
             return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();
         }
     }
@@ -170,7 +176,7 @@ public class PedidosController {
             LOGGER.debug("Apagado o pedido: {}", id);
             return ResponseEntity.noContent().build();
         } catch (DataNotFoundException e) {
-            LOGGER.debug("Pedido não encontrado para exclusão: {}", id);
+            LOGGER.debug("Pedido não encontrado para exclusão: {}", id, e);
             return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();
         }
     }

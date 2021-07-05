@@ -118,7 +118,7 @@ public class PacientesController {
             LOGGER.debug("Alterado Paciente: {}", pacienteDto);
             return ResponseEntity.noContent().build();
         } catch (DataNotFoundException e) {
-            LOGGER.error("Paciente não encontrado para alteração: {}", pacienteDto);
+            LOGGER.error("Paciente não encontrado para alteração: {}", pacienteDto, e);
             return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();
         }
     }
@@ -170,7 +170,7 @@ public class PacientesController {
             LOGGER.debug("Apagado Paciente: {}", id);
             return ResponseEntity.noContent().build();
         } catch (DataNotFoundException e) {
-            LOGGER.error("Paciente não encontrado para exclusão: {}", id);
+            LOGGER.error("Paciente não encontrado para exclusão: {}", id, e);
             return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();
         }
     }

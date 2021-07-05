@@ -101,9 +101,14 @@ public class PedidoItemsController {
         if (pedidoItem.getPedido() == null) pedidoItem.setPedido(new Pedido());
         pedidoItem.getPedido().setIdPedido(idPedido);
 
-        var id = pedidoItemsService.create(pedidoItem);
-        LOGGER.debug("Criado id {} para Item do Pedido {}",id,  pedidoItem);
-        return ResponseEntity.created(URI.create(String.format("%s/%s/items/%s", URL_BASE, idPedido, id))).build();
+        try {
+            var id = pedidoItemsService.create(pedidoItem);
+            LOGGER.debug("Criado id {} para Item do Pedido {}", id, pedidoItem);
+            return ResponseEntity.created(URI.create(String.format("%s/%s/items/%s", URL_BASE, idPedido, id))).build();
+        } catch (DataNotFoundException e) {
+            LOGGER.error("Faltando dados relacionados com tabela. Dados: {}", pedidoItem, e);
+            return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();
+        }
     }
 
     /**
@@ -131,7 +136,7 @@ public class PedidoItemsController {
             LOGGER.trace("Alterado o Item do Pedido {}", pedidoItem);
             return ResponseEntity.noContent().build();
         } catch (DataNotFoundException e) {
-            LOGGER.error("Item do Pedido não encontrado para alteração: {}", pedidoItem);
+            LOGGER.error("Item do Pedido não encontrado para alteração: {}", pedidoItem, e);
             return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();
         }
     }
@@ -181,7 +186,7 @@ public class PedidoItemsController {
             LOGGER.debug("Apagando Item do Pedido {}", id);
             return ResponseEntity.noContent().build();
         } catch (DataNotFoundException e) {
-            LOGGER.error("Item do Pedido não encontrado para exclusão: {}", id);
+            LOGGER.error("Item do Pedido não encontrado para exclusão: {}", id, e);
             return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).build();
         }
     }

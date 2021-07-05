@@ -1,6 +1,10 @@
 package br.com.tamanhofamilia.dasa.receituario.services.pedidos;
 
+import br.com.tamanhofamilia.dasa.receituario.daos.exame.ExameDao;
+import br.com.tamanhofamilia.dasa.receituario.daos.pedidos.PedidoDao;
 import br.com.tamanhofamilia.dasa.receituario.daos.pedidos.PedidoItemDao;
+import br.com.tamanhofamilia.dasa.receituario.models.exame.Exame;
+import br.com.tamanhofamilia.dasa.receituario.models.pedidos.Pedido;
 import br.com.tamanhofamilia.dasa.receituario.models.pedidos.PedidoItem;
 import br.com.tamanhofamilia.dasa.receituario.services.DataNotFoundException;
 import org.junit.jupiter.api.Test;
@@ -23,7 +27,13 @@ class PedidoItemsServiceTest {
     PedidoItemsService service;
 
     @Mock
-    PedidoItemDao dao;
+    PedidoItemDao pedidoItemDao;
+
+    @Mock
+    PedidoDao pedidoDao;
+
+    @Mock
+    ExameDao exameDao;
 
     @Mock
     Pageable pageable;
@@ -32,13 +42,20 @@ class PedidoItemsServiceTest {
     void findAll() {
         service.findAll(pageable);
 
-        verify(dao).findAll(pageable);
+        verify(pedidoItemDao).findAll(pageable);
     }
 
     @Test
     void create() {
-        PedidoItem pedidoItem = new PedidoItem();
-        when(dao.save(pedidoItem)).thenAnswer(e -> {
+        final int idPedido = 1;
+        final int idExame = 2;
+        PedidoItem pedidoItem = PedidoItem.builder()
+                .pedido(Pedido.builder().idPedido(idPedido).build())
+                .exame(Exame.builder().idExame(idExame).build())
+                .build();
+        when(pedidoDao.existsById(idPedido)).thenReturn(true);
+        when(exameDao.existsById(idExame)).thenReturn(true);
+        when(pedidoItemDao.save(pedidoItem)).thenAnswer(e -> {
             PedidoItem exam = e.getArgument(0);
             exam.setIdPedidoItem(1L);
             return exam;
@@ -46,25 +63,40 @@ class PedidoItemsServiceTest {
 
         assertSame(1L, service.create(pedidoItem).longValue());
 
-        verify(dao).save(pedidoItem);
+        verify(pedidoItemDao).save(pedidoItem);
 
     }
 
 
     @Test
     void update() throws DataNotFoundException {
-        final long id = 1;
-        when(dao.existsById(id)).thenReturn(true);
-        PedidoItem pedidoItem = PedidoItem.builder().idPedidoItem(id).build();
+        final long id = 3;
+        final int idPedido = 4;
+        final int idExame = 5;
+        PedidoItem pedidoItem = PedidoItem.builder().idPedidoItem(id)
+                .pedido(Pedido.builder().idPedido(idPedido).build())
+                .exame(Exame.builder().idExame(idExame).build())
+                .build();
+        when(pedidoDao.existsById(idPedido)).thenReturn(true);
+        when(exameDao.existsById(idExame)).thenReturn(true);
+        when(pedidoItemDao.existsById(id)).thenReturn(true);
 
         service.update(pedidoItem);
 
-        verify(dao).save(pedidoItem);
+        verify(pedidoItemDao).save(pedidoItem);
     }
 
     @Test
     void updateNotFound() {
-        PedidoItem pedidoItem = PedidoItem.builder().idPedidoItem(1L).build();
+        final int idPedido = 7;
+        final int idExame = 8;
+        final long idItem = 9;
+        PedidoItem pedidoItem = PedidoItem.builder().idPedidoItem(idItem)
+                .pedido(Pedido.builder().idPedido(idPedido).build())
+                .exame(Exame.builder().idExame(idExame).build())
+                .build();
+        when(pedidoDao.existsById(idPedido)).thenReturn(true);
+        when(exameDao.existsById(idExame)).thenReturn(true);
 
         assertThrows(DataNotFoundException.class, () -> {
             service.update(pedidoItem);
@@ -75,30 +107,30 @@ class PedidoItemsServiceTest {
     void getById() {
         final long id = 1;
         final Optional<PedidoItem> daoReturn = Optional.empty();
-        when(dao.findById(id)).thenReturn(daoReturn);
+        when(pedidoItemDao.findById(id)).thenReturn(daoReturn);
 
         final Optional<PedidoItem> toCheck = service.getById(id);
 
         assertSame(daoReturn, toCheck);
-        verify(dao).findById(id);
+        verify(pedidoItemDao).findById(id);
     }
 
     @Test
     void delete() throws DataNotFoundException {
         final long id = 1;
-        when(dao.existsById(id))
+        when(pedidoItemDao.existsById(id))
                 .thenReturn(true);
 
         service.delete(id);
 
-        verify(dao).deleteById(id);
+        verify(pedidoItemDao).deleteById(id);
     }
 
     @Test
     void deleteNotFound() {
         assertThrows(DataNotFoundException.class, () -> {
             final long id = 1;
-            when(dao.existsById(id))
+            when(pedidoItemDao.existsById(id))
                     .thenReturn(false);
             service.delete(id);
         });
@@ -108,6 +140,6 @@ class PedidoItemsServiceTest {
     void findAllFromPedido() {
         service.findAllFromPedido(1, pageable);
 
-        verify(dao).findByPedidoId(1, pageable);
+        verify(pedidoItemDao).findByPedidoId(1, pageable);
     }
 }
