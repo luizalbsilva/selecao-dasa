@@ -59,6 +59,18 @@ class MedicosServiceTest {
 
     }
 
+    @Test
+    void createDadosRelacionadosFaltando() {
+        final int idConselho = 12;
+        Medico medico = Medico.builder().conselho(Conselho.builder().idConselho(idConselho).build()).build();
+        when(conselhoDao.existsById(idConselho))
+                .thenReturn(false);
+
+        assertThrows(DataNotFoundException.class, () -> {
+            service.create(medico);
+        });
+    }
+
 
     @Test
     void update() throws DataNotFoundException {

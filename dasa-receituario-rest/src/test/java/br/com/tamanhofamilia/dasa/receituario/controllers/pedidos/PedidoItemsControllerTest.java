@@ -76,6 +76,21 @@ class PedidoItemsControllerTest {
     }
 
     @Test
+    void createDataProbDadosRelacionados() throws Exception {
+        when(service.create(any(PedidoItem.class)))
+                .thenThrow(DataNotFoundException.class);
+
+        mockMvc.perform(
+                post("/api/v1/pedidos/2/items")
+                    .content(PEDIDO_ITEM)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isPreconditionFailed());
+
+    }
+
+
+    @Test
     void createData() throws Exception {
         when(service.create(any(PedidoItem.class)))
                 .thenReturn(1L);

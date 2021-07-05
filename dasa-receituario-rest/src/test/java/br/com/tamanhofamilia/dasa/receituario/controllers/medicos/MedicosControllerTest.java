@@ -91,6 +91,18 @@ class MedicosControllerTest {
     }
 
     @Test
+    void createDataSemConselho() throws Exception {
+        when(service.create(any(Medico.class)))
+                .thenThrow(DataNotFoundException.class);
+        mockMvc.perform(
+                post("/api/v1/medicos")
+                        .content(MEDICO)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isPreconditionFailed());
+    }
+
+    @Test
     void updateReturnStatus() throws Exception {
         mockMvc.perform(
                 put("/api/v1/medicos/1")

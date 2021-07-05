@@ -69,6 +69,20 @@ class PedidoItemsServiceTest {
 
 
     @Test
+    void createPedidoComProblemas() {
+        final int idPedido = 1;
+        final int idExame = 2;
+        PedidoItem pedidoItem = PedidoItem.builder()
+                .pedido(Pedido.builder().idPedido(idPedido).build())
+                .exame(Exame.builder().idExame(idExame).build())
+                .build();
+        when(pedidoDao.existsById(idPedido)).thenReturn(false);
+
+        assertThrows(DataNotFoundException.class, () ->  service.create(pedidoItem).longValue());
+    }
+
+
+    @Test
     void update() throws DataNotFoundException {
         final long id = 3;
         final int idPedido = 4;
@@ -84,6 +98,21 @@ class PedidoItemsServiceTest {
         service.update(pedidoItem);
 
         verify(pedidoItemDao).save(pedidoItem);
+    }
+
+    @Test
+    void updateExameInexistente() throws DataNotFoundException {
+        final long id = 3;
+        final int idPedido = 4;
+        final int idExame = 5;
+        PedidoItem pedidoItem = PedidoItem.builder().idPedidoItem(id)
+                .pedido(Pedido.builder().idPedido(idPedido).build())
+                .exame(Exame.builder().idExame(idExame).build())
+                .build();
+        when(pedidoDao.existsById(idPedido)).thenReturn(true);
+        when(exameDao.existsById(idExame)).thenReturn(false);
+
+        assertThrows(DataNotFoundException.class,()-> service.update(pedidoItem));
     }
 
     @Test

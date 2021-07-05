@@ -66,6 +66,18 @@ class PedidosServiceTest {
         verify(pedidoDao).save(pedido);
     }
 
+    @Test
+    void createMedicoInexistente() {
+        final int idMedico = 1;
+        final int idPaciente = 2;
+        final Pedido pedido = Pedido.builder()
+                .medico(Medico.builder().idMedico(idMedico).build())
+                .paciente(Paciente.builder().idPaciente(idPaciente).build())
+                .build();
+        when(medicoDao.existsById(idMedico)).thenReturn(false);
+
+        assertThrows(DataNotFoundException.class, () -> service.create(pedido));
+    }
 
     @Test
     void update() throws DataNotFoundException {
@@ -83,6 +95,21 @@ class PedidosServiceTest {
         service.update(pedido);
 
         verify(pedidoDao).save(pedido);
+    }
+
+
+    @Test
+    void updatePacienteInexistente() throws DataNotFoundException {
+        final int id = 3;
+        final int idMedico = 4;
+        final int idPaciente = 5;
+        Pedido pedido = Pedido.builder().idPedido(id)
+                .medico(Medico.builder().idMedico(idMedico).build())
+                .paciente(Paciente.builder().idPaciente(idPaciente).build())
+                .build();
+        when(medicoDao.existsById(idMedico)).thenReturn(true);
+        when(pacienteDao.existsById(idPaciente)).thenReturn(false);
+        assertThrows(DataNotFoundException.class, () -> service.update(pedido));
     }
 
     @Test

@@ -89,6 +89,7 @@ public class PacientesController {
     @PostMapping
     public ResponseEntity<Void> create(@Valid @RequestBody Paciente pacienteDto) {
         LOGGER.trace("Criando paciente: {}", pacienteDto);
+
         var id = pacientesService.create(pacienteDto);
         LOGGER.debug("Criado id {} para o paciente: {}", id, pacienteDto);
         return ResponseEntity.created(URI.create(String.format("%s/%s", URL_BASE, id))).build();
