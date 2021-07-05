@@ -20,6 +20,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.Valid;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
@@ -91,6 +92,7 @@ public class Paciente {
     /** Email de contato */
     @ApiModelProperty("Email de Contato")
     @NotNull
+    @Email
     @Length(min = 5, max = 255)
     @Column(name = "email", columnDefinition = "varchar(255)", nullable = false)
     private String email;

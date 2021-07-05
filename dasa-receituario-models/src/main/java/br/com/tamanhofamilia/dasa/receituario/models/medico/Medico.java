@@ -20,6 +20,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 /** Entidade representando o médico */
 @Builder
@@ -50,6 +51,7 @@ public class Medico {
     @NotNull
     @Length(min = 2, max = 2)
     @Column(name = "uf_conselho", length = 2, nullable = false)
+    @Pattern(message = "Estado inválido", regexp = "AC|AL|AP|AM|BA|CE|DF|ES|GO|MA|MT|MS|MG|PA|PB|PR|PE|PI|RR|RO|RJ|RN|RS|SC|SP|SE|TO")
     private String ufConselho;
 
     /** Identificador do conselho */
