@@ -65,7 +65,13 @@
             <column name="endereco" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
-            <column name="bairro" type="varchar(255)"/>
+            <column name="bairro" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="cidade" type="varchar(100)">
+                <constraints nullable="false" />
+            </column>
+            <column name="uf" type="varchar(2)"/>
             <column name="telefone" type="varchar(11)">
             </column>
             <column name="mobile" type="varchar(11)">

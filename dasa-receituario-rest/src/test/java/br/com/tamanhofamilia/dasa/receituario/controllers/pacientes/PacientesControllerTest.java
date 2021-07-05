@@ -36,7 +36,9 @@ class PacientesControllerTest {
             "\"nomeMae\": \"Matinha da Vila\"," +
             "\"endereco\": { " +
                 "\"rua\": \"Rua do Sobe e Desce, 43\"," +
-                "\"bairro\": \"centro\"" +
+                "\"bairro\": \"centro\"," +
+                "\"cidade\": \"São Paulo\"," +
+                "\"uf\": \"SP\"" +
             "}," +
             "\"mobile\": \"11988520976\"," +
             "\"telefone\": \"11951459470\"," +
